@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demo</title>
+
+  <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+
+  <style>
+    body, html {
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <a-scene embedded vr-mode-ui="enabled: false" arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
+    <a-marker preset="hiro">
+      <a-entity id="dino" 
+                position="0 0 0" 
+                scale="0.05 0.05 0.05" 
+                gltf-model="https://github.com/zaggow/xs/blob/main/Cubone.glb">
+      </a-entity>
+    </a-marker>
+    <a-entity camera></a-entity>
+  </a-scene>
+</body>
+</html>
+
