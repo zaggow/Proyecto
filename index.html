@@ -1,31 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Demo</title>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Zoológico AR</title>
+    <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+    <style>
+      body, html { margin: 0; overflow: hidden; }
+    </style>
+  </head>
+  <body>
+    <a-scene
+      embedded
+      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+    >
+      <a-marker preset="hiro">
+        <!-- Suelo -->
+        <a-plane
+          position="0 0 0"
+          rotation="-90 0 0"
+          width="4"
+          height="4"
+          color="#88c999"
+        ></a-plane>
 
-  <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
-  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+        <!-- León -->
+        <a-entity
+          gltf-model="https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/Lion/glTF-Binary/Lion.glb"
+          position="-1 0 0"
+          scale="0.01 0.01 0.01"
+        ></a-entity>
+        <a-text value="León" position="-1 0.5 0" align="center" color="black"></a-text>
 
-  <style>
-    body, html {
-      margin: 0;
-      overflow: hidden;
-    }
-  </style>
-</head>
-<body>
-  <a-scene embedded vr-mode-ui="enabled: false" arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
-    <a-marker preset="hiro">
-      <a-entity id="dino" 
-                position="0 0 0" 
-                scale="0.05 0.05 0.05" 
-                gltf-model="https://github.com/zaggow/xs/blob/main/Cubone.glb">
-      </a-entity>
-    </a-marker>
-    <a-entity camera></a-entity>
-  </a-scene>
-</body>
+        <!-- Elefante -->
+        <a-entity
+          gltf-model="https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/Elephant/glTF-Binary/Elephant.glb"
+          position="1 0 0"
+          scale="0.005 0.005 0.005"
+        ></a-entity>
+        <a-text value="Elefante" position="1 0.5 0" align="center" color="black"></a-text>
+      </a-marker>
+
+      <a-entity camera></a-entity>
+    </a-scene>
+  </body>
 </html>
 
