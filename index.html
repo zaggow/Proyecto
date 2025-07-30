@@ -1,45 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Zoológico AR</title>
-    <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
-    <style>
-      body, html { margin: 0; overflow: hidden; }
-    </style>
-  </head>
-  <body>
-    <a-scene
-      embedded
-      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
-    >
-      <a-marker preset="hiro">
-        <!-- Suelo -->
-        <a-plane
-          position="0 0 0"
-          rotation="-90 0 0"
-          width="4"
-          height="4"
-          color="#88c999"
-        ></a-plane>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Museo AR</title>
 
-        <!-- León -->
-        <a-entity
-          gltf-model="https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/Lion/glTF-Binary/Lion.glb"
-          position="-1 0 0"
-          scale="0.01 0.01 0.01"
-        ></a-entity>
+  <!-- A-Frame y AR.js -->
+  <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
 
-        <!-- Nissan GTR -->
-        <a-entity>
-  gltf-model="https://raw.githack.com/zaggow/Proyecto/main/Nissan%20GTR.glb"
-  position="1 0.5 0"
-  scale="0.5 0.5 0.5"
-        </a-entity>
-      </a-marker>
+  <style>
+    body, html {
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <a-scene embedded arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
+    
+    <!-- Exhibición 1: Cubone -->
+    <a-marker preset="hiro">
+      <a-entity gltf-model="https://cdn.jsdelivr.net/gh/zaggow/xs@main/Cubone.glb"
+                scale="0.05 0.05 0.05"
+                position="0 0 0">
+      </a-entity>
+      <a-text value="Cubone - Fósil Pokémon" position="0 0.5 0" align="center" color="white"></a-text>
+    </a-marker>
 
-      <a-entity camera></a-entity>
-    </a-scene>
-  </body>
+    <!-- Exhibición 2: Estatua -->
+    <a-marker preset="kanji">
+      <a-entity gltf-model="https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/Avocado/glTF/Avocado.gltf"
+                scale="10 10 10"
+                position="0 0 0">
+      </a-entity>
+      <a-text value="Avocado - Arte Moderno" position="0 0.7 0" align="center" color="yellow"></a-text>
+    </a-marker>
+
+    <!-- Exhibición 3: Objeto abstracto -->
+    <a-marker type="pattern" url="https://raw.githack.com/AR-js-org/AR.js/master/aframe/examples/marker-training/examples/pattern-files/pattern-letterA.patt">
+      <a-box position="0 0.25 0" depth="0.5" height="0.5" width="0.5" color="#4CC3D9"></a-box>
+      <a-text value="Caja abstracta - Simbolismo" position="0 0.7 0" align="center" color="black"></a-text>
+    </a-marker>
+
+    <!-- Cámara AR -->
+    <a-entity camera></a-entity>
+  </a-scene>
+</body>
 </html>
