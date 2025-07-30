@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Brâncuși's Bird in Space AR</title>
+  <title>Brâncuși's Bird in Space AR with Buttons</title>
 
   <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
@@ -12,6 +12,30 @@
     body, html {
       margin: 0;
       overflow: hidden;
+    }
+    /* Estilos para los botones */
+    #controls {
+      position: fixed;
+      bottom: 20px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 20px; /* Espacio entre botones */
+      z-index: 999; /* Asegura que estén por encima de la escena AR */
+    }
+    .ar-button {
+      padding: 15px 30px;
+      font-size: 1.2em;
+      background-color: #4CAF50; /* Color verde */
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease;
+    }
+    .ar-button:hover {
+      background-color: #45a049;
     }
   </style>
 </head>
@@ -23,14 +47,67 @@
              width="0.5"
              height="0.5"
              depth="0.5"
-             color="#5C4033"> </a-box>
+             color="#5C4033">
+      </a-box>
 
       <a-cylinder id="brancusi-bird"
-                  position="0 0.85 0" radius="0.1"
+                  position="0 0.85 0"
+                  radius="0.1"
                   height="1.2"
-                  color="#D4AF37" rotation="-10 0 0"> </a-cylinder>
+                  color="#D4AF37"
+                  rotation="-10 0 0">
+      </a-cylinder>
     </a-marker>
     <a-entity camera></a-entity>
   </a-scene>
+
+  <div id="controls">
+    <button class="ar-button" id="changeColorBtn">Cambiar Color</button>
+    <button class="ar-button" id="rotateBtn">Rotar Escultura</button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const birdElement = document.getElementById('brancusi-bird');
+      const changeColorBtn = document.getElementById('changeColorBtn');
+      const rotateBtn = document.getElementById('rotateBtn');
+
+      // Colores para alternar
+      const colors = ['#D4AF37', '#C0C0C0', '#B0C4DE', '#CD7F32']; // Dorado, Plata, Azul Acero, Bronce
+
+      let currentColorIndex = 0;
+      let rotationInterval; // Para controlar la rotación
+
+      // Función para cambiar el color
+      changeColorBtn.addEventListener('click', () => {
+        currentColorIndex = (currentColorIndex + 1) % colors.length;
+        birdElement.setAttribute('color', colors[currentColorIndex]);
+      });
+
+      // Función para rotar la escultura
+      rotateBtn.addEventListener('click', () => {
+        if (rotationInterval) {
+          // Si ya está rotando, detener la rotación
+          clearInterval(rotationInterval);
+          rotationInterval = null;
+          rotateBtn.textContent = 'Rotar Escultura';
+        } else {
+          // Si no está rotando, iniciar la rotación
+          let currentRotation = birdElement.getAttribute('rotation');
+          if (typeof currentRotation === 'string') {
+            const parts = currentRotation.split(' ').map(Number);
+            currentRotation = { x: parts[0], y: parts[1], z: parts[2] };
+          }
+
+          rotationInterval = setInterval(() => {
+            currentRotation.y = (currentRotation.y + 1) % 360; // Rotar 1 grado en Y
+            birdElement.setAttribute('rotation', `${currentRotation.x} ${currentRotation.y} ${currentRotation.z}`);
+          }, 20); // Cada 20ms para una rotación suave
+
+          rotateBtn.textContent = 'Detener Rotación';
+        }
+      });
+    });
+  </script>
 </body>
 </html>
