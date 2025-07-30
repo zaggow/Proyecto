@@ -16,26 +16,46 @@
     /* Estilos para los botones */
     #controls {
       position: fixed;
-      bottom: 20px;
-      width: 100%;
+      /* --- CAMBIOS AQUÍ --- */
+      bottom: 2vh; /* Usamos 'vh' para una posición relativa a la altura del viewport */
+      left: 0;
+      right: 0;
+      width: 90%; /* Reducimos el ancho para dejar márgenes */
+      max-width: 600px; /* Limita el ancho en pantallas muy grandes */
+      margin: 0 auto; /* Centra el contenedor */
+      /* --- FIN CAMBIOS --- */
       display: flex;
       justify-content: center;
-      gap: 20px; /* Espacio entre botones */
-      z-index: 999; /* Asegura que estén por encima de la escena AR */
+      gap: 15px; /* Espacio entre botones, un poco reducido */
+      z-index: 999;
+      box-sizing: border-box; /* Asegura que padding y border se incluyan en el ancho */
     }
     .ar-button {
-      padding: 15px 30px;
-      font-size: 1.2em;
-      background-color: #4CAF50; /* Color verde */
+      flex-grow: 1; /* Permite que los botones crezcan para ocupar el espacio */
+      padding: 12px 20px; /* Reducimos un poco el padding */
+      font-size: 1.1em; /* Reducimos ligeramente el tamaño de fuente */
+      background-color: #4CAF50;
       color: white;
       border: none;
       border-radius: 8px;
       cursor: pointer;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       transition: background-color 0.3s ease;
+      white-space: nowrap; /* Evita que el texto se divida en varias líneas */
     }
     .ar-button:hover {
       background-color: #45a049;
+    }
+
+    /* Pequeño ajuste para pantallas muy pequeñas si es necesario */
+    @media (max-width: 400px) {
+      .ar-button {
+        font-size: 1em;
+        padding: 10px 15px;
+      }
+      #controls {
+        gap: 10px;
+      }
     }
   </style>
 </head>
@@ -73,26 +93,22 @@
       const rotateBtn = document.getElementById('rotateBtn');
 
       // Colores para alternar
-      const colors = ['#D4AF37', '#C0C0C0', '#B0C4DE', '#CD7F32']; // Dorado, Plata, Azul Acero, Bronce
+      const colors = ['#D4AF37', '#C0C0C0', '#B0C4DE', '#CD7F32'];
 
       let currentColorIndex = 0;
-      let rotationInterval; // Para controlar la rotación
+      let rotationInterval;
 
-      // Función para cambiar el color
       changeColorBtn.addEventListener('click', () => {
         currentColorIndex = (currentColorIndex + 1) % colors.length;
         birdElement.setAttribute('color', colors[currentColorIndex]);
       });
 
-      // Función para rotar la escultura
       rotateBtn.addEventListener('click', () => {
         if (rotationInterval) {
-          // Si ya está rotando, detener la rotación
           clearInterval(rotationInterval);
           rotationInterval = null;
           rotateBtn.textContent = 'Rotar Escultura';
         } else {
-          // Si no está rotando, iniciar la rotación
           let currentRotation = birdElement.getAttribute('rotation');
           if (typeof currentRotation === 'string') {
             const parts = currentRotation.split(' ').map(Number);
@@ -100,9 +116,9 @@
           }
 
           rotationInterval = setInterval(() => {
-            currentRotation.y = (currentRotation.y + 1) % 360; // Rotar 1 grado en Y
+            currentRotation.y = (currentRotation.y + 1) % 360;
             birdElement.setAttribute('rotation', `${currentRotation.x} ${currentRotation.y} ${currentRotation.z}`);
-          }, 20); // Cada 20ms para una rotación suave
+          }, 20);
 
           rotateBtn.textContent = 'Detener Rotación';
         }
