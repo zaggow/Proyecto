@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Escultura RA</title>
+  <title>Pedestal & Sculpture AR</title>
 
   <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
@@ -13,48 +13,23 @@
       margin: 0;
       overflow: hidden;
     }
-    a-scene {
-      width: 100%;
-      height: 100%;
-      position: fixed;
-      top: 0;
-      left: 0;
-    }
   </style>
 </head>
 <body>
-  <a-scene embedded 
-           vr-mode-ui="enabled: false" 
-           arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
-
-    <!-- Marcador Hiro -->
+  <a-scene embedded vr-mode-ui="enabled: false" arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
     <a-marker preset="hiro">
-      
-      <!-- Pedestal base -->
-      <a-cylinder position="0 0.05 0" radius="0.15" height="0.1" color="#555"></a-cylinder>
+      <a-box id="pedestal"
+             position="0 0.5 0"
+             width="1"
+             height="1"
+             depth="1"
+             color="#8B4513"> </a-box>
 
-      <!-- Eje central de la escultura -->
-      <a-cylinder position="0 0.35 0" radius="0.03" height="0.6" color="#BDBDBD"></a-cylinder>
-
-      <!-- Esfera en la parte superior -->
-      <a-sphere position="0 0.65 0" radius="0.06" color="#E91E63"></a-sphere>
-
-      <!-- Conos decorativos -->
-      <a-cone position="-0.1 0.4 0.1" radius-bottom="0.04" radius-top="0.01" height="0.15" color="#4CAF50" rotation="45 0 0"></a-cone>
-      <a-cone position="0.1 0.25 -0.1" radius-bottom="0.04" radius-top="0.01" height="0.15" color="#03A9F4" rotation="-45 0 0"></a-cone>
-
-      <!-- Cubo artístico -->
-      <a-box position="0 0.5 0.15" depth="0.08" height="0.08" width="0.08" color="#FFC107" rotation="45 45 0"></a-box>
-
-      <!-- Iluminación -->
-      <a-light type="directional" position="1 1 0.5" intensity="0.7"></a-light>
-      <a-light type="ambient" intensity="0.5"></a-light>
-
+      <a-sphere id="sculpture"
+                position="0 1.5 0" radius="0.5"
+                color="#C0C0C0"> </a-sphere>
     </a-marker>
-
-    <!-- Cámara correcta fuera del marcador -->
     <a-entity camera></a-entity>
-
   </a-scene>
 </body>
 </html>
