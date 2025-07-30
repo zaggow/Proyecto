@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Museo AR</title>
+  <title>Demo Museo RA</title>
 
-  <!-- A-Frame y AR.js -->
   <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
 
@@ -17,24 +16,31 @@
   </style>
 </head>
 <body>
-  <a-scene embedded
-           vr-mode-ui="enabled: false"
-           arjs="trackingMethod: best; sourceType: webcam; facingMode: environment; debugUIEnabled: false;">
+  <a-scene embedded vr-mode-ui="enabled: false" arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
     
-    <!-- Marcador con modelo -->
     <a-marker preset="hiro">
-      <a-entity gltf-model="https://cdn.jsdelivr.net/gh/zaggow/xs@main/Cubone.glb"
-                scale="0.01 0.01 0.01"
-                position="0 0.2 0">
+      <!-- Escultura principal -->
+      <a-entity id="dino" 
+                position="0 0.25 0" 
+                scale="0.05 0.05 0.05" 
+                gltf-model="https://github.com/zaggow/xs/blob/main/Cubone.glb">
       </a-entity>
-      <a-text value="Cubone - Fósil Pokémon"
-              position="0 0.6 0"
-              align="center"
-              color="white">
-      </a-text>
+
+      <!-- Pedestal -->
+      <a-cylinder position="0 0.05 0" radius="0.2" height="0.1" color="#888"></a-cylinder>
+
+      <!-- Panel decorativo detrás (como una pared de museo) -->
+      <a-plane position="0 0.4 -0.3" rotation="0 0 0" width="0.6" height="0.6" color="#fff" opacity="0.5"></a-plane>
+
+      <!-- Esferas flotantes artísticas -->
+      <a-sphere position="0.3 0.3 0.1" radius="0.05" color="#F44336"></a-sphere>
+      <a-sphere position="-0.3 0.3 0.1" radius="0.05" color="#3F51B5"></a-sphere>
+
+      <!-- Cono invertido como escultura abstracta -->
+      <a-cone position="0 0.15 0.3" radius-bottom="0.05" radius-top="0.01" height="0.1" color="#4CAF50" rotation="180 0 0"></a-cone>
     </a-marker>
 
-    <!-- Cámara AR -->
+    <!-- Cámara -->
     <a-entity camera></a-entity>
   </a-scene>
 </body>
