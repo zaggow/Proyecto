@@ -16,24 +16,22 @@
     /* Estilos para los botones */
     #controls {
       position: fixed;
-      /* --- CAMBIOS AQUÍ --- */
-      bottom: 2vh; /* Usamos 'vh' para una posición relativa a la altura del viewport */
+      bottom: 2vh;
       left: 0;
       right: 0;
-      width: 90%; /* Reducimos el ancho para dejar márgenes */
-      max-width: 600px; /* Limita el ancho en pantallas muy grandes */
-      margin: 0 auto; /* Centra el contenedor */
-      /* --- FIN CAMBIOS --- */
+      width: 95%; /* Un poco más de ancho para 3 botones */
+      max-width: 800px; /* Incrementado el max-width */
+      margin: 0 auto;
       display: flex;
       justify-content: center;
-      gap: 15px; /* Espacio entre botones, un poco reducido */
+      gap: 15px; /* Espacio entre botones, ajustado para 3 */
       z-index: 999;
-      box-sizing: border-box; /* Asegura que padding y border se incluyan en el ancho */
+      box-sizing: border-box;
     }
     .ar-button {
-      flex-grow: 1; /* Permite que los botones crezcan para ocupar el espacio */
-      padding: 12px 20px; /* Reducimos un poco el padding */
-      font-size: 1.1em; /* Reducimos ligeramente el tamaño de fuente */
+      flex-grow: 1;
+      padding: 18px 25px;
+      font-size: 1.3em;
       background-color: #4CAF50;
       color: white;
       border: none;
@@ -41,20 +39,70 @@
       cursor: pointer;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       transition: background-color 0.3s ease;
-      white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+      white-space: nowrap;
     }
     .ar-button:hover {
       background-color: #45a049;
     }
 
-    /* Pequeño ajuste para pantallas muy pequeñas si es necesario */
-    @media (max-width: 400px) {
+    /* Estilos para el cuadro de información */
+    #infoBox {
+      position: fixed;
+      top: 10vh; /* Desde el 10% de la parte superior de la pantalla */
+      left: 5%;
+      width: 90%;
+      max-width: 500px;
+      background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco semitransparente */
+      color: #333;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      z-index: 1000; /* Asegura que esté por encima de todo */
+      display: none; /* Inicialmente oculto */
+      text-align: center;
+      box-sizing: border-box;
+      overflow-y: auto; /* Permite scroll si el contenido es largo */
+      max-height: 70vh; /* Limita la altura del cuadro */
+    }
+    #infoBox h3 {
+      margin-top: 0;
+      color: #0056b3;
+      font-size: 1.5em;
+    }
+    #infoBox p {
+      font-size: 1.1em;
+      line-height: 1.5;
+    }
+    #infoBox .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 1.8em;
+      font-weight: bold;
+      color: #666;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+    #infoBox .close-btn:hover {
+      color: #000;
+    }
+
+    /* Ajuste para pantallas muy pequeñas */
+    @media (max-width: 450px) { /* Ajustado para 3 botones en pantallas estrechas */
       .ar-button {
         font-size: 1em;
-        padding: 10px 15px;
+        padding: 12px 15px;
       }
       #controls {
         gap: 10px;
+      }
+      #infoBox {
+        padding: 15px;
+        font-size: 0.9em;
+      }
+      #infoBox h3 {
+        font-size: 1.3em;
       }
     }
   </style>
@@ -84,6 +132,16 @@
   <div id="controls">
     <button class="ar-button" id="changeColorBtn">Cambiar Color</button>
     <button class="ar-button" id="rotateBtn">Rotar Escultura</button>
+    <button class="ar-button" id="infoBtn">Información</button> </div>
+
+  <div id="infoBox">
+    <button class="close-btn" id="closeInfoBox">&times;</button> <h3>Pájaro en el Espacio (Bird in Space)</h3>
+    <p>
+      El "Pájaro en el Espacio" es una serie de esculturas creadas por el artista rumano Constantin Brâncuși (1876-1957). La obra no representa un pájaro literal, sino la <strong>idea del vuelo</strong>, el movimiento ascendente y la liberación.
+    </p>
+    <p>
+      Brâncuși buscaba capturar la esencia de las cosas, reduciendo las formas a su expresión más pura y minimalista. Esta pieza es un ejemplo icónico del **arte moderno y la abstracción**, y ha sido realizada en diferentes materiales como bronce y mármrmol, siempre manteniendo su forma elegante y aerodinámica.
+    </p>
   </div>
 
   <script>
@@ -91,6 +149,9 @@
       const birdElement = document.getElementById('brancusi-bird');
       const changeColorBtn = document.getElementById('changeColorBtn');
       const rotateBtn = document.getElementById('rotateBtn');
+      const infoBtn = document.getElementById('infoBtn'); // Nuevo: Botón de información
+      const infoBox = document.getElementById('infoBox'); // Nuevo: Cuadro de información
+      const closeInfoBoxBtn = document.getElementById('closeInfoBox'); // Nuevo: Botón de cerrar
 
       // Colores para alternar
       const colors = ['#D4AF37', '#C0C0C0', '#B0C4DE', '#CD7F32'];
@@ -98,6 +159,7 @@
       let currentColorIndex = 0;
       let rotationInterval;
 
+      // Event listeners existentes
       changeColorBtn.addEventListener('click', () => {
         currentColorIndex = (currentColorIndex + 1) % colors.length;
         birdElement.setAttribute('color', colors[currentColorIndex]);
@@ -122,6 +184,16 @@
 
           rotateBtn.textContent = 'Detener Rotación';
         }
+      });
+
+      // Nuevo: Mostrar/Ocultar el cuadro de información
+      infoBtn.addEventListener('click', () => {
+        infoBox.style.display = 'block'; // Muestra el cuadro
+      });
+
+      // Nuevo: Cerrar el cuadro de información
+      closeInfoBoxBtn.addEventListener('click', () => {
+        infoBox.style.display = 'none'; // Oculta el cuadro
       });
     });
   </script>
