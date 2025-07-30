@@ -118,13 +118,10 @@
              color="#5C4033">
       </a-box>
 
-      <a-cylinder id="brancusi-bird"
-                  position="0 0.85 0"
-                  radius="0.1"
-                  height="1.2"
-                  color="#D4AF37"
-                  rotation="-10 0 0">
-      </a-cylinder>
+      <a-cone id="brancusi-bird"
+              position="0 1.05 0"  radius-bottom="0.12" radius-top="0.01"    height="1.5"         color="#D4AF37"
+              rotation="-10 0 0">
+      </a-cone>
     </a-marker>
     <a-entity camera></a-entity>
   </a-scene>
@@ -132,10 +129,12 @@
   <div id="controls">
     <button class="ar-button" id="changeColorBtn">Cambiar Color</button>
     <button class="ar-button" id="rotateBtn">Rotar Escultura</button>
-    <button class="ar-button" id="infoBtn">Información</button> </div>
+    <button class="ar-button" id="infoBtn">Información</button>
+  </div>
 
   <div id="infoBox">
-    <button class="close-btn" id="closeInfoBox">&times;</button> <h3>Pájaro en el Espacio (Bird in Space)</h3>
+    <button class="close-btn" id="closeInfoBox">&times;</button>
+    <h3>Pájaro en el Espacio (Bird in Space)</h3>
     <p>
       El "Pájaro en el Espacio" es una serie de esculturas creadas por el artista rumano Constantin Brâncuși (1876-1957). La obra no representa un pájaro literal, sino la <strong>idea del vuelo</strong>, el movimiento ascendente y la liberación.
     </p>
@@ -149,9 +148,9 @@
       const birdElement = document.getElementById('brancusi-bird');
       const changeColorBtn = document.getElementById('changeColorBtn');
       const rotateBtn = document.getElementById('rotateBtn');
-      const infoBtn = document.getElementById('infoBtn'); // Nuevo: Botón de información
-      const infoBox = document.getElementById('infoBox'); // Nuevo: Cuadro de información
-      const closeInfoBoxBtn = document.getElementById('closeInfoBox'); // Nuevo: Botón de cerrar
+      const infoBtn = document.getElementById('infoBtn');
+      const infoBox = document.getElementById('infoBox');
+      const closeInfoBoxBtn = document.getElementById('closeInfoBox');
 
       // Colores para alternar
       const colors = ['#D4AF37', '#C0C0C0', '#B0C4DE', '#CD7F32'];
@@ -186,14 +185,14 @@
         }
       });
 
-      // Nuevo: Mostrar/Ocultar el cuadro de información
+      // Mostrar/Ocultar el cuadro de información
       infoBtn.addEventListener('click', () => {
-        infoBox.style.display = 'block'; // Muestra el cuadro
+        infoBox.style.display = 'block';
       });
 
-      // Nuevo: Cerrar el cuadro de información
+      // Cerrar el cuadro de información
       closeInfoBoxBtn.addEventListener('click', () => {
-        infoBox.style.display = 'none'; // Oculta el cuadro
+        infoBox.style.display = 'none';
       });
     });
   </script>
