@@ -14,7 +14,6 @@
       margin: 0;
       overflow: hidden;
     }
-    /* Estilos para los botones */
     #controls {
       position: fixed;
       bottom: 2vh;
@@ -45,8 +44,6 @@
     .ar-button:hover {
       background-color: #45a049;
     }
-
-    /* Estilos para el cuadro de información */
     #infoBox {
       position: fixed;
       top: 10vh;
@@ -88,8 +85,6 @@
     #infoBox .close-btn:hover {
       color: #000;
     }
-
-    /* Ajuste para pantallas muy pequeñas */
     @media (max-width: 450px) {
       .ar-button {
         font-size: 1em;
@@ -109,51 +104,22 @@
   </style>
 </head>
 <body>
-  <a-scene embedded vr-mode-ui="enabled: false" arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
+  <a-scene embedded vr-mode-ui="enabled: false" arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;" cursor="rayOrigin: mouse">
     <a-marker preset="hiro">
-      <a-entity id="main-structure" touch-drag>
-        <a-box id="platform"
-               position="0 0 0"
-               width="1.2"
-               height="0.05"
-               depth="0.6"
-               color="#555555">
-        </a-box>
-
-        <a-box id="cube-1"
-               position="-0.3 0.15 0"
-               width="0.3"
-               height="0.3"
-               depth="0.3"
-               color="#FF0000">
-        </a-box>
-
-        <a-box id="interactive-cube"
-               position="0 0.15 0"
-               width="0.3"
-               height="0.3"
-               depth="0.3"
-               color="#00FF00">
-        </a-box>
-
-        <a-box id="cube-3"
-               position="0.3 0.15 0"
-               width="0.3"
-               height="0.3"
-               depth="0.3"
-               color="#0000FF">
-        </a-box>
+      <a-entity id="main-structure" touch-drag class="touchable">
+        <a-box id="platform" position="0 0 0" width="1.2" height="0.05" depth="0.6" color="#555555"></a-box>
+        <a-box id="cube-1" position="-0.3 0.15 0" width="0.3" height="0.3" depth="0.3" color="#FF0000"></a-box>
+        <a-box id="interactive-cube" position="0 0.15 0" width="0.3" height="0.3" depth="0.3" color="#00FF00"></a-box>
+        <a-box id="cube-3" position="0.3 0.15 0" width="0.3" height="0.3" depth="0.3" color="#0000FF"></a-box>
       </a-entity>
     </a-marker>
     <a-entity camera></a-entity>
   </a-scene>
-
   <div id="controls">
     <button class="ar-button" id="rotateCube1Btn">Girar Cubo 1 (Y)</button>
     <button class="ar-button" id="moveCube2Btn">Subir/Bajar Cubo 2</button>
     <button class="ar-button" id="rotateCube3Btn">Girar Cubo 3 (Z)</button>
   </div>
-
   <div id="infoBox">
     <button class="close-btn" id="closeInfoBox">&times;</button>
     <h3>Controles Interactivos</h3>
@@ -170,29 +136,21 @@
       **¡Nuevo!** Ahora puedes arrastrar el dedo sobre la pantalla para rotar toda la estructura.
     </p>
   </div>
-
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Referencias a los cubos
       const cube1 = document.getElementById('cube-1');
       const interactiveCube = document.getElementById('interactive-cube');
       const cube3 = document.getElementById('cube-3');
-
-      // Referencias a los botones
       const rotateCube1Btn = document.getElementById('rotateCube1Btn');
       const moveCube2Btn = document.getElementById('moveCube2Btn');
       const rotateCube3Btn = document.getElementById('rotateCube3Btn');
-      
       const infoBtn = document.getElementById('infoBtn');
       const infoBox = document.getElementById('infoBox');
       const closeInfoBoxBtn = document.getElementById('closeInfoBox');
-
       let rotate1Interval;
       let move2Interval;
       let rotate3Interval;
       let moveUp = true;
-
-      // Event listeners para los cubos (sin cambios)
       rotateCube1Btn.addEventListener('click', () => {
         if (rotate1Interval) {
           clearInterval(rotate1Interval);
@@ -211,7 +169,6 @@
           rotateCube1Btn.textContent = 'Detener Giro (Y)';
         }
       });
-
       moveCube2Btn.addEventListener('click', () => {
         if (move2Interval) {
           clearInterval(move2Interval);
@@ -225,7 +182,6 @@
             const parts = currentPosition.split(' ').map(Number);
             currentPosition = { x: parts[0], y: parts[1], z: parts[2] };
           }
-
           move2Interval = setInterval(() => {
             if (moveUp) {
               currentPosition.y += 0.005;
@@ -243,7 +199,6 @@
           moveCube2Btn.textContent = 'Detener Movimiento';
         }
       });
-
       rotateCube3Btn.addEventListener('click', () => {
         if (rotate3Interval) {
           clearInterval(rotate3Interval);
@@ -262,12 +217,9 @@
           rotateCube3Btn.textContent = 'Detener Giro (Z)';
         }
       });
-
-      // Lógica de mostrar/ocultar información (sin cambios)
       infoBtn.addEventListener('click', () => {
         infoBox.style.display = 'block';
       });
-
       closeInfoBoxBtn.addEventListener('click', () => {
         infoBox.style.display = 'none';
       });
