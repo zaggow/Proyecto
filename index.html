@@ -146,67 +146,120 @@
   </a-scene>
 
   <div id="controls">
-    <button class="ar-button" id="changeColorBtn">Cambiar Color</button>
-    <button class="ar-button" id="rotateBtn">Rotar Cubo</button>
-    <button class="ar-button" id="infoBtn">Información</button>
+    <button class="ar-button" id="rotateCube1Btn">Girar Cubo 1 (Y)</button>
+    <button class="ar-button" id="moveCube2Btn">Subir/Bajar Cubo 2</button>
+    <button class="ar-button" id="rotateCube3Btn">Girar Cubo 3 (Z)</button>
   </div>
 
   <div id="infoBox">
     <button class="close-btn" id="closeInfoBox">&times;</button>
-    <h3>Información de los Cubos</h3>
+    <h3>Controles Interactivos</h3>
     <p>
-      Esta es una demostración de realidad aumentada con objetos básicos.
-    </p>
-    <p>
-      - Los cubos están colocados sobre una plataforma gris.
+      Esta demostración permite controlar cada cubo individualmente:
       <br>
-      - El cubo del centro (verde) es el **cubo interactivo** que puedes modificar con los botones.
+      - **Girar Cubo 1:** El cubo rojo rotará sobre su eje Y.
+      <br>
+      - **Subir/Bajar Cubo 2:** El cubo verde se moverá hacia arriba y abajo.
+      <br>
+      - **Girar Cubo 3:** El cubo azul rotará sobre su eje Z.
     </p>
   </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // Referencias a los cubos
+      const cube1 = document.getElementById('cube-1');
       const interactiveCube = document.getElementById('interactive-cube');
-      const changeColorBtn = document.getElementById('changeColorBtn');
-      const rotateBtn = document.getElementById('rotateBtn');
+      const cube3 = document.getElementById('cube-3');
+
+      // Referencias a los botones
+      const rotateCube1Btn = document.getElementById('rotateCube1Btn');
+      const moveCube2Btn = document.getElementById('moveCube2Btn');
+      const rotateCube3Btn = document.getElementById('rotateCube3Btn');
+      
       const infoBtn = document.getElementById('infoBtn');
       const infoBox = document.getElementById('infoBox');
       const closeInfoBoxBtn = document.getElementById('closeInfoBox');
 
-      // Colores para alternar en el cubo interactivo
-      const colors = ['#00FF00', '#FFA500', '#800080', '#00FFFF'];
+      let rotate1Interval;
+      let move2Interval;
+      let rotate3Interval;
+      let moveUp = true; // Variable para controlar la dirección del movimiento
 
-      let currentColorIndex = 0;
-      let rotationInterval;
-
-      // Event listeners para el cubo interactivo
-      changeColorBtn.addEventListener('click', () => {
-        currentColorIndex = (currentColorIndex + 1) % colors.length;
-        interactiveCube.setAttribute('color', colors[currentColorIndex]);
-      });
-
-      rotateBtn.addEventListener('click', () => {
-        if (rotationInterval) {
-          clearInterval(rotationInterval);
-          rotationInterval = null;
-          rotateBtn.textContent = 'Rotar Cubo';
+      // Función para rotar el cubo 1
+      rotateCube1Btn.addEventListener('click', () => {
+        if (rotate1Interval) {
+          clearInterval(rotate1Interval);
+          rotate1Interval = null;
+          rotateCube1Btn.textContent = 'Girar Cubo 1 (Y)';
         } else {
-          let currentRotation = interactiveCube.getAttribute('rotation');
+          let currentRotation = cube1.getAttribute('rotation');
           if (typeof currentRotation === 'string') {
             const parts = currentRotation.split(' ').map(Number);
             currentRotation = { x: parts[0], y: parts[1], z: parts[2] };
           }
-
-          rotationInterval = setInterval(() => {
+          rotate1Interval = setInterval(() => {
             currentRotation.y = (currentRotation.y + 1) % 360;
-            interactiveCube.setAttribute('rotation', `${currentRotation.x} ${currentRotation.y} ${currentRotation.z}`);
+            cube1.setAttribute('rotation', `${currentRotation.x} ${currentRotation.y} ${currentRotation.z}`);
           }, 20);
-
-          rotateBtn.textContent = 'Detener Rotación';
+          rotateCube1Btn.textContent = 'Detener Giro (Y)';
         }
       });
 
-      // Event listeners para el cuadro de información
+      // Función para subir y bajar el cubo 2
+      moveCube2Btn.addEventListener('click', () => {
+        if (move2Interval) {
+          clearInterval(move2Interval);
+          move2Interval = null;
+          moveCube2Btn.textContent = 'Subir/Bajar Cubo 2';
+        } else {
+          const minY = 0.15; // Posición inicial del cubo
+          const maxY = 0.5;  // Altura máxima
+          let currentPosition = interactiveCube.getAttribute('position');
+          if (typeof currentPosition === 'string') {
+            const parts = currentPosition.split(' ').map(Number);
+            currentPosition = { x: parts[0], y: parts[1], z: parts[2] };
+          }
+
+          move2Interval = setInterval(() => {
+            if (moveUp) {
+              currentPosition.y += 0.005;
+              if (currentPosition.y >= maxY) {
+                moveUp = false;
+              }
+            } else {
+              currentPosition.y -= 0.005;
+              if (currentPosition.y <= minY) {
+                moveUp = true;
+              }
+            }
+            interactiveCube.setAttribute('position', `${currentPosition.x} ${currentPosition.y} ${currentPosition.z}`);
+          }, 20);
+          moveCube2Btn.textContent = 'Detener Movimiento';
+        }
+      });
+
+      // Función para rotar el cubo 3 en el eje Z
+      rotateCube3Btn.addEventListener('click', () => {
+        if (rotate3Interval) {
+          clearInterval(rotate3Interval);
+          rotate3Interval = null;
+          rotateCube3Btn.textContent = 'Girar Cubo 3 (Z)';
+        } else {
+          let currentRotation = cube3.getAttribute('rotation');
+          if (typeof currentRotation === 'string') {
+            const parts = currentRotation.split(' ').map(Number);
+            currentRotation = { x: parts[0], y: parts[1], z: parts[2] };
+          }
+          rotate3Interval = setInterval(() => {
+            currentRotation.z = (currentRotation.z + 1) % 360;
+            cube3.setAttribute('rotation', `${currentRotation.x} ${currentRotation.y} ${currentRotation.z}`);
+          }, 20);
+          rotateCube3Btn.textContent = 'Detener Giro (Z)';
+        }
+      });
+
+      // Lógica de mostrar/ocultar información (sin cambios)
       infoBtn.addEventListener('click', () => {
         infoBox.style.display = 'block';
       });
