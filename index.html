@@ -2,90 +2,266 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Realidad Virtual con Cámara</title>
+  <title>Museo Virtual - Realidad Aumentada</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
   <style>
     body, html {
       margin: 0;
       overflow: hidden;
+      font-family: 'Arial', sans-serif;
     }
-
-    #playMusicBtn {
+    .controls {
       position: fixed;
       top: 1rem;
       right: 1rem;
-      padding: 10px 16px;
-      background-color: #007BFF;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .control-btn {
+      padding: 12px 18px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
       border: none;
-      border-radius: 8px;
-      z-index: 999;
+      border-radius: 25px;
       font-size: 1rem;
       cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+    }
+    .control-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+    .info-panel {
+      position: fixed;
+      bottom: 1rem;
+      left: 1rem;
+      background: rgba(0,0,0,0.8);
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      max-width: 300px;
+      font-size: 14px;
+      backdrop-filter: blur(10px);
     }
   </style>
 </head>
 <body>
+  <div class="controls">
+    <button id="playMusicBtn" class="control-btn">🎵 Tocar Música</button>
+    <button id="cameraBtn" class="control-btn">📷 Alternar Cámara</button>
+    <button id="infoBtn" class="control-btn">ℹ️ Info</button>
+  </div>
+  
+  <div id="infoPanel" class="info-panel" style="display: none;">
+    <h3>🏛️ Museo Virtual Pokémon</h3>
+    <p>Explora las criaturas míticas en un entorno inmersivo. Usa tu dispositivo VR o navega con mouse/teclado.</p>
+    <p><strong>Controles:</strong> WASD para moverse, mouse para mirar</p>
+  </div>
 
-  <button id="playMusicBtn">Tocar Música</button>
-
-  <a-scene vr-mode-ui="enabled: true" embedded>
-    <!-- Cámara de fondo -->
-    <a-entity id="camera" camera look-controls wasd-controls position="0 1.6 0"></a-entity>
-
-    <!-- Fondo: cámara en vivo (solo móviles compatibles) -->
-    <a-entity geometry="primitive: sphere; radius: 100" material="shader: flat; src: #videoFeed; side: back" scale="-1 1 1"></a-entity>
-
-    <!-- Modelos en la escena -->
+  <a-scene vr-mode-ui="enabled: true" embedded background="color: #001122">
     <a-assets>
-      <video id="videoFeed" autoplay muted playsinline></video>
-
+      <video id="videoFeed" autoplay muted playsinline style="display: none;"></video>
       <a-asset-item id="pikachuModel" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Pikachu.glb"></a-asset-item>
       <a-asset-item id="mewModel" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Mew.glb"></a-asset-item>
       <a-asset-item id="dragonModel" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Dragon.glb"></a-asset-item>
-      <audio id="music" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/musica.mp3"></audio>
+      <audio id="music" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/musica.mp3" loop></audio>
+      
+      <!-- Texturas para el museo -->
+      <img id="marble" src="data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='marble' x='0' y='0' width='20' height='20' patternUnits='userSpaceOnUse'%3E%3Crect fill='%23f8f9fa' width='20' height='20'/%3E%3Cpath d='M0 0L20 20M20 0L0 20' stroke='%23e9ecef' stroke-width='0.5'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23marble)'/%3E%3C/svg%3E">
+      <img id="wood" src="data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='wood' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%238B4513'/%3E%3Cstop offset='50%25' stop-color='%23A0522D'/%3E%3Cstop offset='100%25' stop-color='%238B4513'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23wood)'/%3E%3C/svg%3E">
     </a-assets>
 
-    <!-- Modelos colocados alrededor del usuario -->
-    <a-entity gltf-model="#pikachuModel" position="-1 0 -3" scale="0.4 0.4 0.4"></a-entity>
-    <a-entity gltf-model="#mewModel" position="2 0 -2" scale="0.6 0.6 0.6"></a-entity>
-    <a-entity gltf-model="#dragonModel" position="0 0 -5" scale="0.003 0.003 0.003"></a-entity>
+    <!-- Cámara del usuario -->
+    <a-entity id="camera" camera look-controls wasd-controls position="0 1.6 3">
+      <a-cursor></a-cursor>
+    </a-entity>
 
-    <!-- Iluminación -->
-    <a-entity light="type: ambient; intensity: 1"></a-entity>
-    <a-entity light="type: directional; intensity: 0.8" position="0 5 5"></a-entity>
+    <!-- Fondo de cámara (inicialmente oculto) -->
+    <a-entity id="cameraBackground" visible="false">
+      <a-entity geometry="primitive: sphere; radius: 50" material="shader: flat; src: #videoFeed; side: back" scale="-1 1 1"></a-entity>
+    </a-entity>
+
+    <!-- Suelo del museo -->
+    <a-plane position="0 0 0" rotation="-90 0 0" width="20" height="20" 
+             material="src: #marble; repeat: 10 10" shadow="receive: true"></a-plane>
+    
+    <!-- Paredes del museo -->
+    <a-entity id="museum-walls">
+      <!-- Pared trasera -->
+      <a-plane position="0 3 -10" width="20" height="6" 
+               material="color: #f5f5f5" shadow="receive: true"></a-plane>
+      <!-- Paredes laterales -->
+      <a-plane position="-10 3 0" rotation="0 90 0" width="20" height="6" 
+               material="color: #f0f0f0" shadow="receive: true"></a-plane>
+      <a-plane position="10 3 0" rotation="0 -90 0" width="20" height="6" 
+               material="color: #f0f0f0" shadow="receive: true"></a-plane>
+    </a-entity>
+
+    <!-- Pedestales para los modelos -->
+    <a-entity id="pedestal1" position="-3 0 -5">
+      <a-cylinder position="0 0.5 0" radius="1" height="1" 
+                  material="src: #marble" shadow="cast: true; receive: true"></a-cylinder>
+      <a-text value="PIKACHU\nCriatura Eléctrica" position="0 1.8 0" align="center" 
+              color="#333" width="8" font="roboto"></a-text>
+    </a-entity>
+    
+    <a-entity id="pedestal2" position="3 0 -5">
+      <a-cylinder position="0 0.5 0" radius="1" height="1" 
+                  material="src: #marble" shadow="cast: true; receive: true"></a-cylinder>
+      <a-text value="MEW\nCriatura Psíquica" position="0 1.8 0" align="center" 
+              color="#333" width="8" font="roboto"></a-text>
+    </a-entity>
+    
+    <a-entity id="pedestal3" position="0 0 -8">
+      <a-cylinder position="0 0.5 0" radius="1.2" height="1" 
+                  material="src: #marble" shadow="cast: true; receive: true"></a-cylinder>
+      <a-text value="DRAGÓN\nCriatura Ancestral" position="0 1.8 0" align="center" 
+              color="#333" width="8" font="roboto"></a-text>
+    </a-entity>
+
+    <!-- Modelos 3D con animaciones -->
+    <a-entity gltf-model="#pikachuModel" 
+              position="-3 1 -5" 
+              scale="0.5 0.5 0.5"
+              animation="property: rotation; to: 0 360 0; loop: true; dur: 10000"
+              shadow="cast: true"></a-entity>
+              
+    <a-entity gltf-model="#mewModel" 
+              position="3 1.5 -5" 
+              scale="0.7 0.7 0.7"
+              animation="property: position; to: 3 1.8 -5; dir: alternate; loop: true; dur: 3000"
+              shadow="cast: true"></a-entity>
+              
+    <a-entity gltf-model="#dragonModel" 
+              position="0 1 -8" 
+              scale="0.004 0.004 0.004"
+              animation="property: rotation; to: 0 360 0; loop: true; dur: 15000"
+              shadow="cast: true"></a-entity>
+
+    <!-- Iluminación del museo -->
+    <a-entity light="type: ambient; intensity: 0.6; color: #ffffff"></a-entity>
+    <a-entity light="type: directional; intensity: 0.8; color: #ffffff" 
+              position="5 10 5" shadow="cast: true"></a-entity>
+    <a-entity light="type: directional; intensity: 0.6; color: #ffffff" 
+              position="-5 10 5" shadow="cast: true"></a-entity>
+    
+    <!-- Luces focales para cada pedestal -->
+    <a-entity light="type: spot; intensity: 1.2; angle: 30; color: #fff8dc" 
+              position="-3 4 -5" rotation="-45 0 0"></a-entity>
+    <a-entity light="type: spot; intensity: 1.2; angle: 30; color: #fff8dc" 
+              position="3 4 -5" rotation="-45 0 0"></a-entity>
+    <a-entity light="type: spot; intensity: 1.2; angle: 30; color: #fff8dc" 
+              position="0 4 -8" rotation="-45 0 0"></a-entity>
+
+    <!-- Elementos decorativos -->
+    <a-text value="🏛️ MUSEO VIRTUAL POKÉMON" 
+            position="0 4.5 -9.8" 
+            align="center" 
+            color="#2c3e50" 
+            width="12" 
+            font="roboto"></a-text>
+    
+    <!-- Partículas flotantes para ambiente -->
+    <a-entity id="particles" position="0 3 -5">
+      <a-entity geometry="primitive: sphere; radius: 0.02" 
+                material="color: #ffffff; transparent: true; opacity: 0.3"
+                animation="property: position; to: 2 4 -3; loop: true; dur: 8000; dir: alternate"></a-entity>
+      <a-entity geometry="primitive: sphere; radius: 0.02" 
+                material="color: #ffffff; transparent: true; opacity: 0.3"
+                animation="property: position; to: -2 4 -7; loop: true; dur: 12000; dir: alternate"
+                position="1 0 1"></a-entity>
+    </a-entity>
   </a-scene>
 
   <script>
-    // Activar video de la cámara como fondo
+    let cameraEnabled = false;
+    let isPlaying = false;
+    let infoVisible = false;
+
+    // Referencias a elementos
     const video = document.getElementById('videoFeed');
+    const cameraBackground = document.getElementById('cameraBackground');
+    const museumWalls = document.getElementById('museum-walls');
+    const playMusicBtn = document.getElementById('playMusicBtn');
+    const cameraBtn = document.getElementById('cameraBtn');
+    const infoBtn = document.getElementById('infoBtn');
+    const infoPanel = document.getElementById('infoPanel');
+    const music = document.getElementById('music');
+
+    // Configurar cámara
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices.getUserMedia({ video: true })
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
         .then(function (stream) {
           video.srcObject = stream;
           video.play();
+          console.log('Cámara configurada correctamente');
         })
         .catch(function (error) {
-          alert("No se pudo acceder a la cámara: " + error);
+          console.log('Error al acceder a la cámara:', error);
+          cameraBtn.style.display = 'none';
         });
+    } else {
+      cameraBtn.style.display = 'none';
     }
 
-    // Música
-    const playMusicBtn = document.getElementById('playMusicBtn');
-    const music = document.getElementById('music');
-    let isPlaying = false;
-
+    // Control de música
     playMusicBtn.addEventListener('click', () => {
       if (!isPlaying) {
-        music.play();
-        isPlaying = true;
-        playMusicBtn.textContent = 'Detener Música';
+        music.play().then(() => {
+          isPlaying = true;
+          playMusicBtn.textContent = '🎵 Detener Música';
+        }).catch(error => {
+          console.log('Error al reproducir música:', error);
+        });
       } else {
         music.pause();
         isPlaying = false;
-        playMusicBtn.textContent = 'Tocar Música';
+        playMusicBtn.textContent = '🎵 Tocar Música';
       }
+    });
+
+    // Control de cámara
+    cameraBtn.addEventListener('click', () => {
+      cameraEnabled = !cameraEnabled;
+      if (cameraEnabled) {
+        cameraBackground.setAttribute('visible', 'true');
+        museumWalls.setAttribute('visible', 'false');
+        cameraBtn.textContent = '🏛️ Modo Museo';
+        document.querySelector('a-scene').setAttribute('background', 'color: transparent');
+      } else {
+        cameraBackground.setAttribute('visible', 'false');
+        museumWalls.setAttribute('visible', 'true');
+        cameraBtn.textContent = '📷 Modo Cámara';
+        document.querySelector('a-scene').setAttribute('background', 'color: #001122');
+      }
+    });
+
+    // Control de información
+    infoBtn.addEventListener('click', () => {
+      infoVisible = !infoVisible;
+      infoPanel.style.display = infoVisible ? 'block' : 'none';
+      infoBtn.textContent = infoVisible ? '❌ Cerrar' : 'ℹ️ Info';
+    });
+
+    // Efectos de sonido al cargar
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('Museo Virtual cargado correctamente');
+      
+      // Agregar eventos de hover a los modelos
+      const models = document.querySelectorAll('[gltf-model]');
+      models.forEach(model => {
+        model.addEventListener('mouseenter', () => {
+          model.setAttribute('animation__scale', 'property: scale; to: 1.2 1.2 1.2; dur: 300');
+        });
+        model.addEventListener('mouseleave', () => {
+          model.setAttribute('animation__scale', 'property: scale; to: 1 1 1; dur: 300');
+        });
+      });
     });
   </script>
 </body>
