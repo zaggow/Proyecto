@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Modelos GLTF desde GitHub</title>
+  <title>Modelos GLTF en AR</title>
 
   <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
@@ -31,7 +31,7 @@
       flex-grow: 1;
       padding: 18px 25px;
       font-size: 1.3em;
-      background-color: #00FF00;
+      background-color: #4CAF50;
       color: white;
       border: none;
       border-radius: 8px;
@@ -106,8 +106,8 @@
   <a-scene embedded vr-mode-ui="enabled: false" arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
     <a-assets>
       <a-asset-item id="modeloPikachu" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Pikachu.glb"></a-asset-item>
-       <a-asset-item id="modeloCubone" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Cubone.glb"></a-asset-item>
-      </a-assets>
+      <a-asset-item id="modeloCubone" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Cubone.glb"></a-asset-item>
+    </a-assets>
 
     <a-marker preset="hiro">
       <a-entity id="main-structure" rotation-handler>
@@ -115,21 +115,22 @@
 
         <a-entity id="cube-1"
                   gltf-model="#modeloPikachu"
-                  position="-0.3 0.2 0"
-                  scale="0.3 0.3 0.3"
+                  position="-0.3 0 0"
+                  scale="1.2 1.2 1.2"
                   rotation="0 0 0">
         </a-entity>
 
-        <a-box id="cube"
+        <a-box id="interactive-cube"
                position="0 0.15 0"
                width="0.3"
                height="0.3"
                depth="0.3"
                color="#00FF00">
         </a-box>
-        <a-entity id="interactive-cube"
+        
+        <a-entity id="cube-3"
                   gltf-model="#modeloCubone"
-                  position="0.3 0.2 0"
+                  position="0.3 0.3 0"
                   scale="0.6 0.6 0.6"
                   rotation="0 0 0">
         </a-entity>
@@ -140,19 +141,19 @@
   <div id="controls">
     <button class="ar-button" id="rotateCube1Btn">Girar Modelo 1 (Y)</button>
     <button class="ar-button" id="moveCube2Btn">Subir/Bajar Cubo 2</button>
-    <button class="ar-button" id="rotateCube3Btn">Girar Cubo 3 (Z)</button>
+    <button class="ar-button" id="rotateCube3Btn">Girar Modelo 3 (Z)</button>
   </div>
   <div id="infoBox">
     <button class="close-btn" id="closeInfoBox">&times;</button>
     <h3>Controles Interactivos</h3>
     <p>
-      Esta demostración permite controlar cada cubo individualmente:
+      Esta demostración permite controlar cada objeto individualmente:
       <br>
       - **Girar Modelo 1:** El modelo de Pikachu rotará sobre su eje Y.
       <br>
       - **Subir/Bajar Cubo 2:** El cubo verde se moverá hacia arriba y abajo.
       <br>
-      - **Girar Cubo 3:** El cubo azul rotará sobre su eje Z.
+      - **Girar Modelo 3:** El modelo de Cubone rotará sobre su eje Z.
       <br>
       <br>
       **¡Nuevo!** Ahora puedes arrastrar el dedo sobre la pantalla para rotar toda la estructura.
@@ -251,7 +252,7 @@
         if (rotate3Interval) {
           clearInterval(rotate3Interval);
           rotate3Interval = null;
-          rotateCube3Btn.textContent = 'Girar Cubo 3 (Z)';
+          rotateCube3Btn.textContent = 'Girar Modelo 3 (Z)';
         } else {
           let currentRotation = cube3.getAttribute('rotation');
           if (typeof currentRotation === 'string') {
@@ -275,13 +276,3 @@
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
