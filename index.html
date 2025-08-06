@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Control Táctil de la Estructura</title>
+  <title>Control Táctil de la Estructura2</title>
 
   <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
@@ -143,19 +143,20 @@
         let lastX = null;
         let rotationSpeed = 0.5;
 
+        // Escucha el evento de inicio del toque en la escena
         el.sceneEl.addEventListener('touchstart', (evt) => {
-          if (evt.touches.length === 1) { // Solo un dedo
+          if (evt.touches.length === 1) { // Solo si hay un dedo
             lastX = evt.touches[0].pageX;
           }
         });
 
+        // Escucha el evento de movimiento del dedo
         el.sceneEl.addEventListener('touchmove', (evt) => {
           if (evt.touches.length === 1 && lastX !== null) {
             const currentX = evt.touches[0].pageX;
             const diffX = currentX - lastX;
             const rotationY = el.object3D.rotation.y;
             
-            // Convertir la rotación de radianes a grados y actualizar
             const newRotationY = (rotationY + (diffX * rotationSpeed * (Math.PI / 180))) % (2 * Math.PI);
             el.object3D.rotation.y = newRotationY;
             
@@ -163,6 +164,7 @@
           }
         });
 
+        // Reinicia la posición al levantar el dedo
         el.sceneEl.addEventListener('touchend', () => {
           lastX = null;
         });
@@ -235,7 +237,7 @@
         if (rotate3Interval) {
           clearInterval(rotate3Interval);
           rotate3Interval = null;
-          rotateCube3Btn.textContent = 'Girar Cubo 3 (Z :v)';
+          rotateCube3Btn.textContent = 'Girar Cubo 3 (Z)';
         } else {
           let currentRotation = cube3.getAttribute('rotation');
           if (typeof currentRotation === 'string') {
