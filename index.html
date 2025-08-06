@@ -31,7 +31,7 @@
       flex-grow: 1;
       padding: 18px 25px;
       font-size: 1.3em;
-      background-color: #4CAF50;
+      background-color: #FF0000;
       color: white;
       border: none;
       border-radius: 8px;
@@ -106,7 +106,7 @@
   <a-scene embedded vr-mode-ui="enabled: false" arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
     <a-assets>
       <a-asset-item id="modeloPikachu" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Pikachu.glb"></a-asset-item>
-      <a-asset-item id="modeloCubone" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Cubone.glb"></a-asset-item>
+     <a-asset-item id="modeloMew" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Mew.glb"></a-asset-item>
     </a-assets>
 
     <a-marker preset="hiro">
@@ -129,7 +129,7 @@
         </a-box>
         
         <a-entity id="cube-3"
-                  gltf-model="#modeloCubone"
+                  gltf-model="#modeloMew"
                   position="0.3 0.3 0"
                   scale="0.6 0.6 0.6"
                   rotation="0 0 0">
@@ -276,3 +276,4 @@
   </script>
 </body>
 </html>
+
