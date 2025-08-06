@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Brâncuși's Bird in Space AR with Buttons</title>
+  <title>Plataforma con Tres Cubos AR</title>
 
   <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
@@ -19,12 +19,12 @@
       bottom: 2vh;
       left: 0;
       right: 0;
-      width: 95%; /* Un poco más de ancho para 3 botones */
-      max-width: 800px; /* Incrementado el max-width */
+      width: 95%;
+      max-width: 800px;
       margin: 0 auto;
       display: flex;
       justify-content: center;
-      gap: 15px; /* Espacio entre botones, ajustado para 3 */
+      gap: 15px;
       z-index: 999;
       box-sizing: border-box;
     }
@@ -48,21 +48,21 @@
     /* Estilos para el cuadro de información */
     #infoBox {
       position: fixed;
-      top: 10vh; /* Desde el 10% de la parte superior de la pantalla */
+      top: 10vh;
       left: 5%;
       width: 90%;
       max-width: 500px;
-      background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco semitransparente */
+      background-color: rgba(255, 255, 255, 0.9);
       color: #333;
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-      z-index: 1000; /* Asegura que esté por encima de todo */
-      display: none; /* Inicialmente oculto */
+      z-index: 1000;
+      display: none;
       text-align: center;
       box-sizing: border-box;
-      overflow-y: auto; /* Permite scroll si el contenido es largo */
-      max-height: 70vh; /* Limita la altura del cuadro */
+      overflow-y: auto;
+      max-height: 70vh;
     }
     #infoBox h3 {
       margin-top: 0;
@@ -89,7 +89,7 @@
     }
 
     /* Ajuste para pantallas muy pequeñas */
-    @media (max-width: 450px) { /* Ajustado para 3 botones en pantallas estrechas */
+    @media (max-width: 450px) {
       .ar-button {
         font-size: 1em;
         padding: 12px 15px;
@@ -110,67 +110,88 @@
 <body>
   <a-scene embedded vr-mode-ui="enabled: false" arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
     <a-marker preset="hiro">
-      <a-box id="pedestal"
+      <a-box id="platform"
+             position="0 0 0"
+             width="2"
+             height="0.1"
+             depth="1"
+             color="#555555">
+      </a-box>
+
+      <a-box id="cube-1"
+             position="-0.6 0.25 0"
+             width="0.5"
+             height="0.5"
+             depth="0.5"
+             color="#FF0000">
+      </a-box>
+
+      <a-box id="interactive-cube"
              position="0 0.25 0"
              width="0.5"
              height="0.5"
              depth="0.5"
-             color="#5C4033">
+             color="#00FF00">
       </a-box>
 
-      <a-cone id="brancusi-bird"
-              position="0 1.05 0"  radius-bottom="0.12" radius-top="0.01"    height="1.5"         color="#D4AF37"
-              rotation="-10 0 0">
-      </a-cone>
+      <a-box id="cube-3"
+             position="0.6 0.25 0"
+             width="0.5"
+             height="0.5"
+             depth="0.5"
+             color="#0000FF">
+      </a-box>
     </a-marker>
     <a-entity camera></a-entity>
   </a-scene>
 
   <div id="controls">
     <button class="ar-button" id="changeColorBtn">Cambiar Color</button>
-    <button class="ar-button" id="rotateBtn">Rotar Escultura</button>
+    <button class="ar-button" id="rotateBtn">Rotar Cubo</button>
     <button class="ar-button" id="infoBtn">Información</button>
   </div>
 
   <div id="infoBox">
     <button class="close-btn" id="closeInfoBox">&times;</button>
-    <h3>Pájaro en el Espacio (Bird in Space)</h3>
+    <h3>Información de los Cubos</h3>
     <p>
-      El "Pájaro en el Espacio" es una serie de esculturas creadas por el artista rumano Constantin Brâncuși (1876-1957). La obra no representa un pájaro literal, sino la <strong>idea del vuelo</strong>, el movimiento ascendente y la liberación.
+      Esta es una demostración de realidad aumentada con objetos básicos.
     </p>
     <p>
-      Brâncuși buscaba capturar la esencia de las cosas, reduciendo las formas a su expresión más pura y minimalista. Esta pieza es un ejemplo icónico del **arte moderno y la abstracción**, y ha sido realizada en diferentes materiales como bronce y mármrmol, siempre manteniendo su forma elegante y aerodinámica.
+      - Los cubos están colocados sobre una plataforma gris.
+      <br>
+      - El cubo del centro (verde) es el **cubo interactivo** que puedes modificar con los botones.
     </p>
   </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const birdElement = document.getElementById('brancusi-bird');
+      const interactiveCube = document.getElementById('interactive-cube'); // Referencia al cubo del centro
       const changeColorBtn = document.getElementById('changeColorBtn');
       const rotateBtn = document.getElementById('rotateBtn');
       const infoBtn = document.getElementById('infoBtn');
       const infoBox = document.getElementById('infoBox');
       const closeInfoBoxBtn = document.getElementById('closeInfoBox');
 
-      // Colores para alternar
-      const colors = ['#D4AF37', '#C0C0C0', '#B0C4DE', '#CD7F32'];
+      // Colores para alternar en el cubo interactivo
+      const colors = ['#00FF00', '#FFA500', '#800080', '#00FFFF']; // Verde, Naranja, Morado, Cian
 
       let currentColorIndex = 0;
       let rotationInterval;
 
-      // Event listeners existentes
+      // Event listeners para el cubo interactivo
       changeColorBtn.addEventListener('click', () => {
         currentColorIndex = (currentColorIndex + 1) % colors.length;
-        birdElement.setAttribute('color', colors[currentColorIndex]);
+        interactiveCube.setAttribute('color', colors[currentColorIndex]);
       });
 
       rotateBtn.addEventListener('click', () => {
         if (rotationInterval) {
           clearInterval(rotationInterval);
           rotationInterval = null;
-          rotateBtn.textContent = 'Rotar Escultura';
+          rotateBtn.textContent = 'Rotar Cubo';
         } else {
-          let currentRotation = birdElement.getAttribute('rotation');
+          let currentRotation = interactiveCube.getAttribute('rotation');
           if (typeof currentRotation === 'string') {
             const parts = currentRotation.split(' ').map(Number);
             currentRotation = { x: parts[0], y: parts[1], z: parts[2] };
@@ -178,19 +199,18 @@
 
           rotationInterval = setInterval(() => {
             currentRotation.y = (currentRotation.y + 1) % 360;
-            birdElement.setAttribute('rotation', `${currentRotation.x} ${currentRotation.y} ${currentRotation.z}`);
+            interactiveCube.setAttribute('rotation', `${currentRotation.x} ${currentRotation.y} ${currentRotation.z}`);
           }, 20);
 
           rotateBtn.textContent = 'Detener Rotación';
         }
       });
 
-      // Mostrar/Ocultar el cuadro de información
+      // Event listeners para el cuadro de información
       infoBtn.addEventListener('click', () => {
         infoBox.style.display = 'block';
       });
 
-      // Cerrar el cuadro de información
       closeInfoBoxBtn.addEventListener('click', () => {
         infoBox.style.display = 'none';
       });
