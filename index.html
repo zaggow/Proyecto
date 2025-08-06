@@ -112,33 +112,33 @@
     <a-marker preset="hiro">
       <a-box id="platform"
              position="0 0 0"
-             width="2"
-             height="0.1"
-             depth="1"
+             width="1.2"
+             height="0.05"
+             depth="0.6"
              color="#555555">
       </a-box>
 
       <a-box id="cube-1"
-             position="-0.6 0.25 0"
-             width="0.5"
-             height="0.5"
-             depth="0.5"
+             position="-0.3 0.15 0"
+             width="0.3"
+             height="0.3"
+             depth="0.3"
              color="#FF0000">
       </a-box>
 
       <a-box id="interactive-cube"
-             position="0 0.25 0"
-             width="0.5"
-             height="0.5"
-             depth="0.5"
+             position="0 0.15 0"
+             width="0.3"
+             height="0.3"
+             depth="0.3"
              color="#00FF00">
       </a-box>
 
       <a-box id="cube-3"
-             position="0.6 0.25 0"
-             width="0.5"
-             height="0.5"
-             depth="0.5"
+             position="0.3 0.15 0"
+             width="0.3"
+             height="0.3"
+             depth="0.3"
              color="#0000FF">
       </a-box>
     </a-marker>
@@ -166,7 +166,7 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const interactiveCube = document.getElementById('interactive-cube'); // Referencia al cubo del centro
+      const interactiveCube = document.getElementById('interactive-cube');
       const changeColorBtn = document.getElementById('changeColorBtn');
       const rotateBtn = document.getElementById('rotateBtn');
       const infoBtn = document.getElementById('infoBtn');
@@ -174,7 +174,7 @@
       const closeInfoBoxBtn = document.getElementById('closeInfoBox');
 
       // Colores para alternar en el cubo interactivo
-      const colors = ['#00FF00', '#FFA500', '#800080', '#00FFFF']; // Verde, Naranja, Morado, Cian
+      const colors = ['#00FF00', '#FFA500', '#800080', '#00FFFF'];
 
       let currentColorIndex = 0;
       let rotationInterval;
