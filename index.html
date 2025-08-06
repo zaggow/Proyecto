@@ -107,6 +107,8 @@
     <a-assets>
       <a-asset-item id="modeloPikachu" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Pikachu.glb"></a-asset-item>
      <a-asset-item id="modeloMew" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Mew.glb"></a-asset-item>
+      <a-asset-item id="modeloDragon" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Dragon.glb"></a-asset-item>
+
     </a-assets>
 
     <a-marker preset="hiro">
@@ -120,13 +122,12 @@
                   rotation="0 0 0">
         </a-entity>
 
-        <a-box id="interactive-cube"
-               position="0 0.15 0"
-               width="0.3"
-               height="0.3"
-               depth="0.3"
-               color="#00FF00">
-        </a-box>
+        <a-entity id="interactive-cube"
+                  gltf-model="#modeloDragon"
+                  position="0 0 0"
+                  scale="0.6 0.6 0.6"
+                  rotation="0 0 0">
+        </a-entity>
         
         <a-entity id="cube-3"
                   gltf-model="#modeloMew"
@@ -276,6 +277,7 @@
   </script>
 </body>
 </html>
+
 
 
 
