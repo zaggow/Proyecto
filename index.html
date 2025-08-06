@@ -2,189 +2,90 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <title>Realidad Virtual con Cámara</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Museo Disney VR sin marcador</title>
   <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
-
   <style>
     body, html {
       margin: 0;
       overflow: hidden;
     }
-    #controls {
-      position: fixed;
-      bottom: 2vh;
-      left: 0;
-      right: 0;
-      width: 95%;
-      max-width: 800px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      z-index: 999;
-    }
-    .ar-button {
-      flex-grow: 1;
-      padding: 18px 25px;
-      font-size: 1.3em;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
+
     #playMusicBtn {
       position: fixed;
-      top: 2vh;
-      right: 2vh;
-      padding: 12px 20px;
-      font-size: 1.2em;
+      top: 1rem;
+      right: 1rem;
+      padding: 10px 16px;
       background-color: #007BFF;
       color: white;
       border: none;
       border-radius: 8px;
-      z-index: 1000;
+      z-index: 999;
+      font-size: 1rem;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <a-scene background="color: #ECECEC">
-    <a-assets>
-      <a-asset-item id="modeloPikachu" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Pikachu.glb"></a-asset-item>
-      <a-asset-item id="modeloMew" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Mew.glb"></a-asset-item>
-      <a-asset-item id="modeloDragon" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Dragon.glb"></a-asset-item>
-      <audio id="music" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/musica.mp3"></audio>
-    </a-assets>
-
-    <!-- Cámara con control de movimiento -->
-    <a-entity id="rig" position="0 1.6 4">
-      <a-camera wasd-controls look-controls>
-        <a-cursor></a-cursor>
-      </a-camera>
-    </a-entity>
-
-    <!-- Suelo -->
-    <a-plane rotation="-90 0 0" width="20" height="20" color="#cccccc"></a-plane>
-
-    <!-- Base -->
-    <a-box id="platform" position="0 0 0" width="2" height="0.1" depth="1" color="#888"></a-box>
-
-    <!-- Pikachu -->
-    <a-entity id="cube-1"
-              gltf-model="#modeloPikachu"
-              position="-0.6 0.3 0"
-              scale="0.3 0.3 0.3"
-              rotation="0 0 0">
-    </a-entity>
-
-    <!-- Dragon -->
-    <a-entity id="interactive-cube"
-              gltf-model="#modeloDragon"
-              position="0 0.15 0"
-              scale="0.001 0.001 0.001"
-              rotation="0 180 0">
-    </a-entity>
-
-    <!-- Mew -->
-    <a-entity id="cube-3"
-              gltf-model="#modeloMew"
-              position="0.6 0.3 0"
-              scale="0.6 0.6 0.6"
-              rotation="0 0 0">
-    </a-entity>
-
-    <!-- Luces -->
-    <a-entity light="type: ambient; intensity: 1"></a-entity>
-    <a-entity light="type: directional; intensity: 0.5" position="0 5 5"></a-entity>
-  </a-scene>
-
-  <div id="controls">
-    <button class="ar-button" id="rotateCube1Btn">Girar Pikachu (Y)</button>
-    <button class="ar-button" id="moveCube2Btn">Subir/Bajar Dragón</button>
-    <button class="ar-button" id="rotateCube3Btn">Girar Mew (Z)</button>
-  </div>
 
   <button id="playMusicBtn">Tocar Música</button>
 
+  <a-scene vr-mode-ui="enabled: true" embedded>
+    <!-- Cámara de fondo -->
+    <a-entity id="camera" camera look-controls wasd-controls position="0 1.6 0"></a-entity>
+
+    <!-- Fondo: cámara en vivo (solo móviles compatibles) -->
+    <a-entity geometry="primitive: sphere; radius: 100" material="shader: flat; src: #videoFeed; side: back" scale="-1 1 1"></a-entity>
+
+    <!-- Modelos en la escena -->
+    <a-assets>
+      <video id="videoFeed" autoplay muted playsinline></video>
+
+      <a-asset-item id="pikachuModel" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Pikachu.glb"></a-asset-item>
+      <a-asset-item id="mewModel" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Mew.glb"></a-asset-item>
+      <a-asset-item id="dragonModel" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Dragon.glb"></a-asset-item>
+      <audio id="music" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/musica.mp3"></audio>
+    </a-assets>
+
+    <!-- Modelos colocados alrededor del usuario -->
+    <a-entity gltf-model="#pikachuModel" position="-1 0 -3" scale="0.4 0.4 0.4"></a-entity>
+    <a-entity gltf-model="#mewModel" position="2 0 -2" scale="0.6 0.6 0.6"></a-entity>
+    <a-entity gltf-model="#dragonModel" position="0 0 -5" scale="0.003 0.003 0.003"></a-entity>
+
+    <!-- Iluminación -->
+    <a-entity light="type: ambient; intensity: 1"></a-entity>
+    <a-entity light="type: directional; intensity: 0.8" position="0 5 5"></a-entity>
+  </a-scene>
+
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const cube1 = document.getElementById('cube-1');
-      const interactiveCube = document.getElementById('interactive-cube');
-      const cube3 = document.getElementById('cube-3');
-      const rotateCube1Btn = document.getElementById('rotateCube1Btn');
-      const moveCube2Btn = document.getElementById('moveCube2Btn');
-      const rotateCube3Btn = document.getElementById('rotateCube3Btn');
-      const playMusicBtn = document.getElementById('playMusicBtn');
-      const music = document.getElementById('music');
-      let rotate1Interval, move2Interval, rotate3Interval;
-      let moveUp = true;
-      let isMusicPlaying = false;
+    // Activar video de la cámara como fondo
+    const video = document.getElementById('videoFeed');
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function (stream) {
+          video.srcObject = stream;
+          video.play();
+        })
+        .catch(function (error) {
+          alert("No se pudo acceder a la cámara: " + error);
+        });
+    }
 
-      rotateCube1Btn.addEventListener('click', () => {
-        if (rotate1Interval) {
-          clearInterval(rotate1Interval);
-          rotate1Interval = null;
-          rotateCube1Btn.textContent = 'Girar Pikachu (Y)';
-        } else {
-          let currentRotation = cube1.getAttribute('rotation');
-          rotate1Interval = setInterval(() => {
-            currentRotation.y = (currentRotation.y + 1) % 360;
-            cube1.setAttribute('rotation', `${currentRotation.x} ${currentRotation.y} ${currentRotation.z}`);
-          }, 20);
-          rotateCube1Btn.textContent = 'Detener Giro (Y)';
-        }
-      });
+    // Música
+    const playMusicBtn = document.getElementById('playMusicBtn');
+    const music = document.getElementById('music');
+    let isPlaying = false;
 
-      moveCube2Btn.addEventListener('click', () => {
-        if (move2Interval) {
-          clearInterval(move2Interval);
-          move2Interval = null;
-          moveCube2Btn.textContent = 'Subir/Bajar Dragón';
-        } else {
-          const minY = 0.15;
-          const maxY = 0.5;
-          let currentPosition = interactiveCube.getAttribute('position');
-          move2Interval = setInterval(() => {
-            if (moveUp) {
-              currentPosition.y += 0.005;
-              if (currentPosition.y >= maxY) moveUp = false;
-            } else {
-              currentPosition.y -= 0.005;
-              if (currentPosition.y <= minY) moveUp = true;
-            }
-            interactiveCube.setAttribute('position', `${currentPosition.x} ${currentPosition.y} ${currentPosition.z}`);
-          }, 20);
-          moveCube2Btn.textContent = 'Detener Movimiento';
-        }
-      });
-
-      rotateCube3Btn.addEventListener('click', () => {
-        if (rotate3Interval) {
-          clearInterval(rotate3Interval);
-          rotate3Interval = null;
-          rotateCube3Btn.textContent = 'Girar Mew (Z)';
-        } else {
-          let currentRotation = cube3.getAttribute('rotation');
-          rotate3Interval = setInterval(() => {
-            currentRotation.z = (currentRotation.z + 1) % 360;
-            cube3.setAttribute('rotation', `${currentRotation.x} ${currentRotation.y} ${currentRotation.z}`);
-          }, 20);
-          rotateCube3Btn.textContent = 'Detener Giro (Z)';
-        }
-      });
-
-      playMusicBtn.addEventListener('click', () => {
-        if (!isMusicPlaying) {
-          music.play();
-          isMusicPlaying = true;
-          playMusicBtn.textContent = 'Detener Música';
-        } else {
-          music.pause();
-          isMusicPlaying = false;
-          playMusicBtn.textContent = 'Tocar Música';
-        }
-      });
+    playMusicBtn.addEventListener('click', () => {
+      if (!isPlaying) {
+        music.play();
+        isPlaying = true;
+        playMusicBtn.textContent = 'Detener Música';
+      } else {
+        music.pause();
+        isPlaying = false;
+        playMusicBtn.textContent = 'Tocar Música';
+      }
     });
   </script>
 </body>
