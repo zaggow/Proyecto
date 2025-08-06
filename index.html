@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Plataforma con Tres Cubos AR</title>
+  <title>Control Táctil de la Estructura</title>
 
   <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+  <script src="https://unpkg.com/aframe-touch-drag-component@1.1.0/dist/aframe-touch-drag-component.min.js"></script>
 
   <style>
     body, html {
@@ -110,37 +111,39 @@
 <body>
   <a-scene embedded vr-mode-ui="enabled: false" arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
     <a-marker preset="hiro">
-      <a-box id="platform"
-             position="0 0 0"
-             width="1.2"
-             height="0.05"
-             depth="0.6"
-             color="#555555">
-      </a-box>
+      <a-entity id="main-structure" touch-drag>
+        <a-box id="platform"
+               position="0 0 0"
+               width="1.2"
+               height="0.05"
+               depth="0.6"
+               color="#555555">
+        </a-box>
 
-      <a-box id="cube-1"
-             position="-0.3 0.15 0"
-             width="0.3"
-             height="0.3"
-             depth="0.3"
-             color="#FF0000">
-      </a-box>
+        <a-box id="cube-1"
+               position="-0.3 0.15 0"
+               width="0.3"
+               height="0.3"
+               depth="0.3"
+               color="#FF0000">
+        </a-box>
 
-      <a-box id="interactive-cube"
-             position="0 0.15 0"
-             width="0.3"
-             height="0.3"
-             depth="0.3"
-             color="#00FF00">
-      </a-box>
+        <a-box id="interactive-cube"
+               position="0 0.15 0"
+               width="0.3"
+               height="0.3"
+               depth="0.3"
+               color="#00FF00">
+        </a-box>
 
-      <a-box id="cube-3"
-             position="0.3 0.15 0"
-             width="0.3"
-             height="0.3"
-             depth="0.3"
-             color="#0000FF">
-      </a-box>
+        <a-box id="cube-3"
+               position="0.3 0.15 0"
+               width="0.3"
+               height="0.3"
+               depth="0.3"
+               color="#0000FF">
+        </a-box>
+      </a-entity>
     </a-marker>
     <a-entity camera></a-entity>
   </a-scene>
@@ -162,6 +165,9 @@
       - **Subir/Bajar Cubo 2:** El cubo verde se moverá hacia arriba y abajo.
       <br>
       - **Girar Cubo 3:** El cubo azul rotará sobre su eje Z.
+      <br>
+      <br>
+      **¡Nuevo!** Ahora puedes arrastrar el dedo sobre la pantalla para rotar toda la estructura.
     </p>
   </div>
 
@@ -184,9 +190,9 @@
       let rotate1Interval;
       let move2Interval;
       let rotate3Interval;
-      let moveUp = true; // Variable para controlar la dirección del movimiento
+      let moveUp = true;
 
-      // Función para rotar el cubo 1
+      // Event listeners para los cubos (sin cambios)
       rotateCube1Btn.addEventListener('click', () => {
         if (rotate1Interval) {
           clearInterval(rotate1Interval);
@@ -206,15 +212,14 @@
         }
       });
 
-      // Función para subir y bajar el cubo 2
       moveCube2Btn.addEventListener('click', () => {
         if (move2Interval) {
           clearInterval(move2Interval);
           move2Interval = null;
           moveCube2Btn.textContent = 'Subir/Bajar Cubo 2';
         } else {
-          const minY = 0.15; // Posición inicial del cubo
-          const maxY = 0.5;  // Altura máxima
+          const minY = 0.15;
+          const maxY = 0.5;
           let currentPosition = interactiveCube.getAttribute('position');
           if (typeof currentPosition === 'string') {
             const parts = currentPosition.split(' ').map(Number);
@@ -239,7 +244,6 @@
         }
       });
 
-      // Función para rotar el cubo 3 en el eje Z
       rotateCube3Btn.addEventListener('click', () => {
         if (rotate3Interval) {
           clearInterval(rotate3Interval);
