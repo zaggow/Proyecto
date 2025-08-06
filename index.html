@@ -31,7 +31,7 @@
       flex-grow: 1;
       padding: 18px 25px;
       font-size: 1.3em;
-      background-color: #FF0000;
+      background-color: #4CAF50;
       color: white;
       border: none;
       border-radius: 8px;
@@ -42,6 +42,19 @@
     }
     .ar-button:hover {
       background-color: #45a049;
+    }
+    #playMusicBtn {
+      position: fixed;
+      top: 2vh;
+      right: 2vh;
+      padding: 12px 20px;
+      font-size: 1.2em;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      z-index: 1000;
     }
     #infoBox {
       position: fixed;
@@ -106,9 +119,9 @@
   <a-scene embedded vr-mode-ui="enabled: false" arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
     <a-assets>
       <a-asset-item id="modeloPikachu" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Pikachu.glb"></a-asset-item>
-     <a-asset-item id="modeloMew" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Mew.glb"></a-asset-item>
+      <a-asset-item id="modeloMew" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Mew.glb"></a-asset-item>
       <a-asset-item id="modeloDragon" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Dragon.glb"></a-asset-item>
-
+      <audio id="music" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Pokemon_Theme_Kanto.mp3"></audio>
     </a-assets>
 
     <a-marker preset="hiro">
@@ -140,9 +153,9 @@
     <a-entity camera></a-entity>
   </a-scene>
   <div id="controls">
-    <button class="ar-button" id="rotateCube1Btn">Girar Modelo 1 (Y)</button>
-    <button class="ar-button" id="moveCube2Btn">Subir/Bajar Cubo 2</button>
-    <button class="ar-button" id="rotateCube3Btn">Girar Modelo 3 (Z)</button>
+    <button class="ar-button" id="rotateCube1Btn">Girar Pikachu (Y)</button>
+    <button class="ar-button" id="moveCube2Btn">Subir/Bajar Dragón</button>
+    <button class="ar-button" id="rotateCube3Btn">Girar Mew (Z)</button>
   </div>
   <div id="infoBox">
     <button class="close-btn" id="closeInfoBox">&times;</button>
@@ -150,16 +163,17 @@
     <p>
       Esta demostración permite controlar cada objeto individualmente:
       <br>
-      - **Girar Modelo 1:** El modelo de Pikachu rotará sobre su eje Y.
+      - **Girar Pikachu:** El modelo de Pikachu rotará sobre su eje Y.
       <br>
-      - **Subir/Bajar Cubo 2:** El cubo verde se moverá hacia arriba y abajo.
+      - **Subir/Bajar Dragón:** El modelo de Dragón se moverá hacia arriba y abajo.
       <br>
-      - **Girar Modelo 3:** El modelo de Cubone rotará sobre su eje Z.
+      - **Girar Mew:** El modelo de Mew rotará sobre su eje Z.
       <br>
       <br>
       **¡Nuevo!** Ahora puedes arrastrar el dedo sobre la pantalla para rotar toda la estructura.
     </p>
   </div>
+  <button id="playMusicBtn">Tocar Música</button>
   <script>
     AFRAME.registerComponent('rotation-handler', {
       init: function () {
@@ -197,15 +211,18 @@
       const infoBtn = document.getElementById('infoBtn');
       const infoBox = document.getElementById('infoBox');
       const closeInfoBoxBtn = document.getElementById('closeInfoBox');
+      const playMusicBtn = document.getElementById('playMusicBtn');
+      const music = document.getElementById('music');
       let rotate1Interval;
       let move2Interval;
       let rotate3Interval;
       let moveUp = true;
+      let isMusicPlaying = false;
       rotateCube1Btn.addEventListener('click', () => {
         if (rotate1Interval) {
           clearInterval(rotate1Interval);
           rotate1Interval = null;
-          rotateCube1Btn.textContent = 'Girar Modelo 1 (Y)';
+          rotateCube1Btn.textContent = 'Girar Pikachu (Y)';
         } else {
           let currentRotation = cube1.getAttribute('rotation');
           if (typeof currentRotation === 'string') {
@@ -223,7 +240,7 @@
         if (move2Interval) {
           clearInterval(move2Interval);
           move2Interval = null;
-          moveCube2Btn.textContent = 'Subir/Bajar Cubo 2';
+          moveCube2Btn.textContent = 'Subir/Bajar Dragón';
         } else {
           const minY = 0.15;
           const maxY = 0.5;
@@ -253,7 +270,7 @@
         if (rotate3Interval) {
           clearInterval(rotate3Interval);
           rotate3Interval = null;
-          rotateCube3Btn.textContent = 'Girar Modelo 3 (Z)';
+          rotateCube3Btn.textContent = 'Girar Mew (Z)';
         } else {
           let currentRotation = cube3.getAttribute('rotation');
           if (typeof currentRotation === 'string') {
@@ -273,15 +290,22 @@
       closeInfoBoxBtn.addEventListener('click', () => {
         infoBox.style.display = 'none';
       });
+      // Lógica para el botón de música
+      playMusicBtn.addEventListener('click', () => {
+        if (!isMusicPlaying) {
+          music.play();
+          isMusicPlaying = true;
+          playMusicBtn.textContent = 'Detener Música';
+        } else {
+          music.pause();
+          isMusicPlaying = false;
+          playMusicBtn.textContent = 'Tocar Música';
+        }
+      });
     });
   </script>
 </body>
 </html>
-
-
-
-
-
 
 
 
