@@ -1,132 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Modelos GLTF en AR (Sin Marcador)</title>
-
+  <title>Escena AR 2x6m</title>
   <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
-
   <style>
     body, html {
       margin: 0;
       overflow: hidden;
     }
-    #controls {
-      position: fixed;
-      bottom: 2vh;
-      left: 0;
-      right: 0;
-      width: 95%;
-      max-width: 800px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      z-index: 999;
-      box-sizing: border-box;
-    }
-    .ar-button {
-      flex-grow: 1;
-      padding: 18px 25px;
-      font-size: 1.3em;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      transition: background-color 0.3s ease;
-      white-space: nowrap;
-    }
-    .ar-button:hover {
-      background-color: #45a049;
-    }
-    #playMusicBtn {
-      position: fixed;
-      top: 2vh;
-      right: 2vh;
-      padding: 12px 20px;
-      font-size: 1.2em;
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      z-index: 1000;
-    }
-    #infoBox {
-      position: fixed;
-      top: 10vh;
-      left: 5%;
-      width: 90%;
-      max-width: 500px;
-      background-color: rgba(255, 255, 255, 0.9);
-      color: #333;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-      z-index: 1000;
-      display: none;
-      text-align: center;
-      box-sizing: border-box;
-      overflow-y: auto;
-      max-height: 70vh;
-    }
-    #infoBox h3 {
-      margin-top: 0;
-      color: #0056b3;
-      font-size: 1.5em;
-    }
-    #infoBox p {
-      font-size: 1.1em;
-      line-height: 1.5;
-    }
-    #infoBox .close-btn {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      font-size: 1.8em;
-      font-weight: bold;
-      color: #666;
-      cursor: pointer;
-      background: none;
-      border: none;
-    }
-    #infoBox .close-btn:hover {
-      color: #000;
-    }
-    @media (max-width: 450px) {
-      .ar-button {
-        font-size: 1em;
-        padding: 12px 15px;
-      }
-      #controls {
-        gap: 10px;
-      }
-      #infoBox {
-        padding: 15px;
-        font-size: 0.9em;
-      }
-      #infoBox h3 {
-        font-size: 1.3em;
-      }
-    }
   </style>
 </head>
 <body>
-  <a-scene embedded vr-mode-ui="enabled: false" arjs="sourceType: webcam; debugUIEnabled: false;">
+  <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
+    <!-- Carga de modelos -->
     <a-assets>
       <a-asset-item id="modeloPikachu" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Pikachu.glb"></a-asset-item>
       <a-asset-item id="modeloMew" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Mew.glb"></a-asset-item>
       <a-asset-item id="modeloDragon" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Dragon.glb"></a-asset-item>
-      <audio id="music" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/musica.mp3"></audio>
     </a-assets>
 
-    <!-- Modelos sin marcador, en el espacio AR directamente -->
-    <a-entity id="main-structure" position="0 0 -2" rotation-handler>
-      <a-box id="platform" position="0 0 0" width="1.2" height="0.05" depth="0.6" color="#555555"></a-box>
+    <!-- Plano base de 2x6 metros -->
+    <a-plane width="2" height="6" rotation="-90 0 0" color="#cccccc" position="0 0 0"></a-plane>
+
+    <!-- Estructura de modelos centrada en (0, 0, 0) -->
+    <a-entity id="main-structure" position="0 0 0" rotation-handler>
+      <a-box id="platform" position="0 0.025 0" width="1.2" height="0.05" depth="0.6" color="#555"></a-box>
 
       <a-entity id="cube-1"
                 gltf-model="#modeloPikachu"
@@ -150,28 +51,9 @@
       </a-entity>
     </a-entity>
 
+    <!-- Cámara -->
     <a-entity camera></a-entity>
   </a-scene>
-
-  <div id="controls">
-    <button class="ar-button" id="rotateCube1Btn">Girar Pikachu (Y)</button>
-    <button class="ar-button" id="moveCube2Btn">Subir/Bajar Dragón</button>
-    <button class="ar-button" id="rotateCube3Btn">Girar Mew (Z)</button>
-  </div>
-
-  <div id="infoBox">
-    <button class="close-btn" id="closeInfoBox">&times;</button>
-    <h3>Controles Interactivos</h3>
-    <p>
-      Esta demostración permite controlar cada objeto individualmente:<br>
-      - <strong>Girar Pikachu:</strong> El modelo de Pikachu rotará sobre su eje Y.<br>
-      - <strong>Subir/Bajar Dragón:</strong> El modelo de Dragón se moverá hacia arriba y abajo.<br>
-      - <strong>Girar Mew:</strong> El modelo de Mew rotará sobre su eje Z.<br><br>
-      <strong>¡Nuevo!</strong> Puedes arrastrar el dedo para rotar toda la estructura.
-    </p>
-  </div>
-
-  <button id="playMusicBtn">Tocar Música</button>
 
   <script>
     AFRAME.registerComponent('rotation-handler', {
@@ -179,11 +61,13 @@
         const el = this.el;
         let lastX = null;
         let rotationSpeed = 0.5;
+
         el.sceneEl.addEventListener('touchstart', (evt) => {
           if (evt.touches.length === 1) {
             lastX = evt.touches[0].pageX;
           }
         });
+
         el.sceneEl.addEventListener('touchmove', (evt) => {
           if (evt.touches.length === 1 && lastX !== null) {
             const currentX = evt.touches[0].pageX;
@@ -194,109 +78,11 @@
             lastX = currentX;
           }
         });
+
         el.sceneEl.addEventListener('touchend', () => {
           lastX = null;
         });
       }
-    });
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const cube1 = document.getElementById('cube-1');
-      const interactiveCube = document.getElementById('interactive-cube');
-      const cube3 = document.getElementById('cube-3');
-      const rotateCube1Btn = document.getElementById('rotateCube1Btn');
-      const moveCube2Btn = document.getElementById('moveCube2Btn');
-      const rotateCube3Btn = document.getElementById('rotateCube3Btn');
-      const infoBox = document.getElementById('infoBox');
-      const closeInfoBoxBtn = document.getElementById('closeInfoBox');
-      const playMusicBtn = document.getElementById('playMusicBtn');
-      const music = document.getElementById('music');
-      let rotate1Interval;
-      let move2Interval;
-      let rotate3Interval;
-      let moveUp = true;
-      let isMusicPlaying = false;
-
-      rotateCube1Btn.addEventListener('click', () => {
-        if (rotate1Interval) {
-          clearInterval(rotate1Interval);
-          rotate1Interval = null;
-          rotateCube1Btn.textContent = 'Girar Pikachu (Y)';
-        } else {
-          let currentRotation = cube1.getAttribute('rotation');
-          if (typeof currentRotation === 'string') {
-            const parts = currentRotation.split(' ').map(Number);
-            currentRotation = { x: parts[0], y: parts[1], z: parts[2] };
-          }
-          rotate1Interval = setInterval(() => {
-            currentRotation.y = (currentRotation.y + 1) % 360;
-            cube1.setAttribute('rotation', `${currentRotation.x} ${currentRotation.y} ${currentRotation.z}`);
-          }, 20);
-          rotateCube1Btn.textContent = 'Detener Giro (Y)';
-        }
-      });
-
-      moveCube2Btn.addEventListener('click', () => {
-        if (move2Interval) {
-          clearInterval(move2Interval);
-          move2Interval = null;
-          moveCube2Btn.textContent = 'Subir/Bajar Dragón';
-        } else {
-          const minY = 0.15;
-          const maxY = 0.5;
-          let currentPosition = interactiveCube.getAttribute('position');
-          if (typeof currentPosition === 'string') {
-            const parts = currentPosition.split(' ').map(Number);
-            currentPosition = { x: parts[0], y: parts[1], z: parts[2] };
-          }
-          move2Interval = setInterval(() => {
-            if (moveUp) {
-              currentPosition.y += 0.005;
-              if (currentPosition.y >= maxY) moveUp = false;
-            } else {
-              currentPosition.y -= 0.005;
-              if (currentPosition.y <= minY) moveUp = true;
-            }
-            interactiveCube.setAttribute('position', `${currentPosition.x} ${currentPosition.y} ${currentPosition.z}`);
-          }, 20);
-          moveCube2Btn.textContent = 'Detener Movimiento';
-        }
-      });
-
-      rotateCube3Btn.addEventListener('click', () => {
-        if (rotate3Interval) {
-          clearInterval(rotate3Interval);
-          rotate3Interval = null;
-          rotateCube3Btn.textContent = 'Girar Mew (Z)';
-        } else {
-          let currentRotation = cube3.getAttribute('rotation');
-          if (typeof currentRotation === 'string') {
-            const parts = currentRotation.split(' ').map(Number);
-            currentRotation = { x: parts[0], y: parts[1], z: parts[2] };
-          }
-          rotate3Interval = setInterval(() => {
-            currentRotation.z = (currentRotation.z + 1) % 360;
-            cube3.setAttribute('rotation', `${currentRotation.x} ${currentRotation.y} ${currentRotation.z}`);
-          }, 20);
-          rotateCube3Btn.textContent = 'Detener Giro (Z)';
-        }
-      });
-
-      closeInfoBoxBtn.addEventListener('click', () => {
-        infoBox.style.display = 'none';
-      });
-
-      playMusicBtn.addEventListener('click', () => {
-        if (!isMusicPlaying) {
-          music.play();
-          isMusicPlaying = true;
-          playMusicBtn.textContent = 'Detener Música';
-        } else {
-          music.pause();
-          isMusicPlaying = false;
-          playMusicBtn.textContent = 'Tocar Música';
-        }
-      });
     });
   </script>
 </body>
