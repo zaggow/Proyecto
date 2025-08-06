@@ -106,7 +106,7 @@
   <a-scene embedded vr-mode-ui="enabled: false" arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
     <a-assets>
       <a-asset-item id="modeloPikachu" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Pikachu.glb"></a-asset-item>
-    </a-assets>
+      </a-assets>
 
     <a-marker preset="hiro">
       <a-entity id="main-structure" rotation-handler>
@@ -114,8 +114,8 @@
 
         <a-entity id="cube-1"
                   gltf-model="#modeloPikachu"
-                  position="-0.3 0 0"
-                  scale="1 1 1"
+                  position="-0.3 0.2 0"
+                  scale="0.05 0.05 0.05"
                   rotation="0 0 0">
         </a-entity>
 
@@ -275,6 +275,3 @@
   </script>
 </body>
 </html>
-
-
-
