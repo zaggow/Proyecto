@@ -2,550 +2,190 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Museo Virtual - Realidad Aumentada</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Museo Disney VR sin marcador</title>
   <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+
   <style>
     body, html {
       margin: 0;
       overflow: hidden;
-      font-family: 'Arial', sans-serif;
     }
-    .controls {
+    #controls {
       position: fixed;
-      top: 1rem;
-      right: 1rem;
-      z-index: 999;
+      bottom: 2vh;
+      left: 0;
+      right: 0;
+      width: 95%;
+      max-width: 800px;
+      margin: 0 auto;
       display: flex;
-      flex-direction: column;
-      gap: 10px;
+      justify-content: center;
+      gap: 15px;
+      z-index: 999;
     }
-    .control-btn {
-      padding: 12px 18px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    .ar-button {
+      flex-grow: 1;
+      padding: 18px 25px;
+      font-size: 1.3em;
+      background-color: #4CAF50;
       color: white;
       border: none;
-      border-radius: 25px;
-      font-size: 1rem;
+      border-radius: 8px;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      transition: all 0.3s ease;
     }
-    .control-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-    }
-    .info-panel {
+    #playMusicBtn {
       position: fixed;
-      bottom: 1rem;
-      left: 1rem;
-      background: rgba(0,0,0,0.8);
+      top: 2vh;
+      right: 2vh;
+      padding: 12px 20px;
+      font-size: 1.2em;
+      background-color: #007BFF;
       color: white;
-      padding: 15px;
-      border-radius: 10px;
-      max-width: 300px;
-      font-size: 14px;
-      backdrop-filter: blur(10px);
-    }
-    .creature-counter {
-      position: fixed;
-      top: 1rem;
-      left: 1rem;
-      background: rgba(255,215,0,0.9);
-      color: #333;
-      padding: 10px 15px;
-      border-radius: 20px;
-      font-weight: bold;
-      z-index: 999;
+      border: none;
+      border-radius: 8px;
+      z-index: 1000;
     }
   </style>
 </head>
 <body>
-  <div class="creature-counter">
-    🦋 Criaturas Volando: <span id="creatureCount">8</span>
-  </div>
-
-  <div class="controls">
-    <button id="playMusicBtn" class="control-btn">🎵 Tocar Música</button>
-    <button id="cameraBtn" class="control-btn">📷 Alternar Cámara</button>
-    <button id="soundBtn" class="control-btn">🔊 Sonidos Criaturas</button>
-    <button id="infoBtn" class="control-btn">ℹ️ Info</button>
-  </div>
-  
-  <div id="infoPanel" class="info-panel" style="display: none;">
-    <h3>🏛️ Museo Virtual Pokémon</h3>
-    <p>Explora 8 criaturas míticas volando en un entorno inmersivo. Haz clic en cada criatura para escuchar su sonido único.</p>
-    <p><strong>Controles:</strong> WASD para moverse, mouse para mirar, clic para interactuar</p>
-  </div>
-
-  <a-scene vr-mode-ui="enabled: true" embedded background="color: #001122">
+  <a-scene background="color: #ECECEC">
     <a-assets>
-      <video id="videoFeed" autoplay muted playsinline style="display: none;"></video>
-      <a-asset-item id="pikachuModel" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Pikachu.glb"></a-asset-item>
-      <a-asset-item id="mewModel" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Mew.glb"></a-asset-item>
-      <a-asset-item id="dragonModel" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Dragon.glb"></a-asset-item>
-      <audio id="music" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/musica.mp3" loop></audio>
-      
-      <!-- Sonidos para cada criatura -->
-      <audio id="pikachuSound" preload="auto">
-        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmAaATiS1+/PdCMGJXzJ8N2QQQoUXrTp66hVFAoUXrTp66hVFApKX+Ttu2EbBjmT2vLOdCQGJX3L8N6QQgkTXbPo6qhUFAgSDKfh8LNfHTiQ1u/LdSgFJHfH8N2QQgsVXrTq66hVFAggDaXi8bJgHTuS2O/MdSkFJXzJ8N2QQgoUXrPo6qhVFAgSDKfh8LNfHTiP1e/LdSgFJHfH8N2QQgsVXrTq66hVFAhC" type="audio/wav">
-      </audio>
-      <audio id="mewSound" preload="auto">
-        <source src="data:audio/wav;base64,UklGRiQEAABXQVZFZm10IBAAAAABAAEAgD4AAIA+AAABAAgAZGF0YQAEAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmAaATiS1+/PdCMGJXzJ8N2QQQoUXrTp66hVFApGn+DyvmAaATiS1+/PdCMGJXzJ8N2QQQoUXrTp66hVFApGn+DyvmAaATiS1+/PdCMGJXzJ8N2QQQoUXrTp66hVFAo=" type="audio/wav">
-      </audio>
-      <audio id="dragonSound" preload="auto">
-        <source src="data:audio/wav;base64,UklGRkoEAABXQVZFZm10IBAAAAABAAEAgD4AAIA+AAABAAgAZGF0YSYEAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmAaATiS1+/PdCMGJXzJ8N2QQQoUXrTp66hVFApGn+DyvmAaATiS1+/PdCMGJXzJ8N2QQQoUXrTp66hVFApGn+DyvmAaATiS1+/PdCMGJXzJ8N2QQQoUXrTp66hVFApGn+DyvmAaATiS1+/PdCMGJXzJ8N2QQQoUXrTp66hVFApGn+DyvmAaATiS1+/PdCMGJXzJ8N2QQQoUXrTp66hVFAo=" type="audio/wav">
-      </audio>
-      <audio id="butterfreeSound" preload="auto">
-        <source src="data:audio/wav;base64,UklGRiQEAABXQVZFZm10IBAAAAABAAEAgLsAAIC7AAABAAgAZGF0YQAEAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmAaATiS1+/PdCMGJXzJ8N2QQQoUXrTp66hVFAo=" type="audio/wav">
-      </audio>
-      <audio id="charizardSound" preload="auto">
-        <source src="data:audio/wav;base64,UklGRjQEAABXQVZFZm10IBAAAAABAAEAgBUAAIAVAAABAAgAZGF0YRAE=" type="audio/wav">
-      </audio>
-      <audio id="articunoSound" preload="auto">
-        <source src="data:audio/wav;base64,UklGRjQEAABXQVZFZm10IBAAAAABAAEAgEsAAIBLAAABAAgAZGF0YRAE=" type="audio/wav">
-      </audio>
-      <audio id="lugiaSond" preload="auto">
-        <source src="data:audio/wav;base64,UklGRjQEAABXQVZFZm10IBAAAAABAAEAgBUAAIAVAAABAAgAZGF0YRAE=" type="audio/wav">
-      </audio>
-      <audio id="dragoniteSound" preload="auto">
-        <source src="data:audio/wav;base64,UklGRjQEAABXQVZFZm10IBAAAAABAAEAgBUAAIAVAAABAAgAZGF0YRAE=" type="audio/wav">
-      </audio>
-      
-      <!-- Texturas para el museo -->
-      <img id="marble" src="data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='marble' x='0' y='0' width='20' height='20' patternUnits='userSpaceOnUse'%3E%3Crect fill='%23f8f9fa' width='20' height='20'/%3E%3Cpath d='M0 0L20 20M20 0L0 20' stroke='%23e9ecef' stroke-width='0.5'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23marble)'/%3E%3C/svg%3E">
+      <a-asset-item id="modeloPikachu" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Pikachu.glb"></a-asset-item>
+      <a-asset-item id="modeloMew" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Mew.glb"></a-asset-item>
+      <a-asset-item id="modeloDragon" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Dragon.glb"></a-asset-item>
+      <audio id="music" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/musica.mp3"></audio>
     </a-assets>
 
-    <!-- Cámara del usuario -->
-    <a-entity id="camera" camera look-controls wasd-controls position="0 1.6 3">
-      <a-cursor color="#FFD700"></a-cursor>
+    <!-- Cámara con control de movimiento -->
+    <a-entity id="rig" position="0 1.6 4">
+      <a-camera wasd-controls look-controls>
+        <a-cursor></a-cursor>
+      </a-camera>
     </a-entity>
 
-    <!-- Fondo de cámara (inicialmente oculto) -->
-    <a-entity id="cameraBackground" visible="false">
-      <a-entity geometry="primitive: sphere; radius: 50" material="shader: flat; src: #videoFeed; side: back" scale="-1 1 1"></a-entity>
+    <!-- Suelo -->
+    <a-plane rotation="-90 0 0" width="20" height="20" color="#cccccc"></a-plane>
+
+    <!-- Base -->
+    <a-box id="platform" position="0 0 0" width="2" height="0.1" depth="1" color="#888"></a-box>
+
+    <!-- Pikachu -->
+    <a-entity id="cube-1"
+              gltf-model="#modeloPikachu"
+              position="-0.6 0.3 0"
+              scale="0.3 0.3 0.3"
+              rotation="0 0 0">
     </a-entity>
 
-    <!-- Suelo del museo -->
-    <a-plane position="0 0 0" rotation="-90 0 0" width="30" height="30" 
-             material="src: #marble; repeat: 15 15" shadow="receive: true"></a-plane>
-    
-    <!-- Paredes del museo -->
-    <a-entity id="museum-walls">
-      <!-- Pared trasera -->
-      <a-plane position="0 3 -15" width="30" height="6" 
-               material="color: #f5f5f5" shadow="receive: true"></a-plane>
-      <!-- Paredes laterales -->
-      <a-plane position="-15 3 0" rotation="0 90 0" width="30" height="6" 
-               material="color: #f0f0f0" shadow="receive: true"></a-plane>
-      <a-plane position="15 3 0" rotation="0 -90 0" width="30" height="6" 
-               material="color: #f0f0f0" shadow="receive: true"></a-plane>
+    <!-- Dragon -->
+    <a-entity id="interactive-cube"
+              gltf-model="#modeloDragon"
+              position="0 0.15 0"
+              scale="0.001 0.001 0.001"
+              rotation="0 180 0">
     </a-entity>
 
-    <!-- CRIATURA 1: PIKACHU -->
-    <a-entity id="pikachu-exhibit" class="flying-creature" sound-trigger="pikachu">
-      <a-entity gltf-model="#pikachuModel" 
-                position="-8 3 -8" 
-                scale="0.6 0.6 0.6"
-                animation="property: position; to: -6 5 -6; loop: true; dur: 4000; dir: alternate; easing: easeInOutSine"
-                animation__rotation="property: rotation; to: 0 360 0; loop: true; dur: 8000"
-                class="clickable-creature"
-                sound="src: #pikachuSound; volume: 0.5"
-                shadow="cast: true"></a-entity>
-      <a-text value="⚡ PIKACHU\nCriatura Eléctrica\n(Haz clic para sonido)" 
-              position="-8 1 -8" align="center" 
-              color="#FFD700" width="6" font="roboto"></a-text>
+    <!-- Mew -->
+    <a-entity id="cube-3"
+              gltf-model="#modeloMew"
+              position="0.6 0.3 0"
+              scale="0.6 0.6 0.6"
+              rotation="0 0 0">
     </a-entity>
 
-    <!-- CRIATURA 2: MEW -->
-    <a-entity id="mew-exhibit" class="flying-creature" sound-trigger="mew">
-      <a-entity gltf-model="#mewModel" 
-                position="8 4 -8" 
-                scale="0.8 0.8 0.8"
-                animation="property: position; to: 6 6 -6; loop: true; dur: 6000; dir: alternate; easing: easeInOutQuad"
-                animation__rotation="property: rotation; to: 360 0 0; loop: true; dur: 10000"
-                class="clickable-creature"
-                sound="src: #mewSound; volume: 0.5"
-                shadow="cast: true"></a-entity>
-      <a-text value="🔮 MEW\nCriatura Psíquica\n(Haz clic para sonido)" 
-              position="8 1 -8" align="center" 
-              color="#FF69B4" width="6" font="roboto"></a-text>
-    </a-entity>
-
-    <!-- CRIATURA 3: DRAGÓN -->
-    <a-entity id="dragon-exhibit" class="flying-creature" sound-trigger="dragon">
-      <a-entity gltf-model="#dragonModel" 
-                position="0 5 -12" 
-                scale="0.005 0.005 0.005"
-                animation="property: position; to: 2 7 -10; loop: true; dur: 8000; dir: alternate; easing: easeInOutSine"
-                animation__rotation="property: rotation; to: 0 360 0; loop: true; dur: 12000"
-                class="clickable-creature"
-                sound="src: #dragonSound; volume: 0.7"
-                shadow="cast: true"></a-entity>
-      <a-text value="🐉 DRAGÓN ANCESTRAL\nCriatura Legendaria\n(Haz clic para sonido)" 
-              position="0 1 -12" align="center" 
-              color="#8B0000" width="6" font="roboto"></a-text>
-    </a-entity>
-
-    <!-- CRIATURA 4: BUTTERFREE (Simulado con esfera) -->
-    <a-entity id="butterfree-exhibit" class="flying-creature" sound-trigger="butterfree">
-      <a-entity geometry="primitive: sphere; radius: 0.3" 
-                material="color: #9370DB; metalness: 0.5; roughness: 0.2"
-                position="-5 6 -5" 
-                animation="property: position; to: -3 4 -3; loop: true; dur: 3000; dir: alternate; easing: easeInOutQuad"
-                animation__rotation="property: rotation; to: 360 360 0; loop: true; dur: 5000"
-                class="clickable-creature"
-                sound="src: #butterfreeSound; volume: 0.4"
-                shadow="cast: true">
-        <!-- Alas simuladas -->
-        <a-plane position="-0.4 0 0" rotation="0 0 45" width="0.6" height="0.3" material="color: #FFD700; transparent: true; opacity: 0.7"></a-plane>
-        <a-plane position="0.4 0 0" rotation="0 0 -45" width="0.6" height="0.3" material="color: #FFD700; transparent: true; opacity: 0.7"></a-plane>
-      </a-entity>
-      <a-text value="🦋 BUTTERFREE\nCriatura Voladora\n(Haz clic para sonido)" 
-              position="-5 1.5 -5" align="center" 
-              color="#9370DB" width="5" font="roboto"></a-text>
-    </a-entity>
-
-    <!-- CRIATURA 5: CHARIZARD (Simulado con forma de dragón) -->
-    <a-entity id="charizard-exhibit" class="flying-creature" sound-trigger="charizard">
-      <a-entity geometry="primitive: box; width: 1; height: 0.5; depth: 2" 
-                material="color: #FF4500; metalness: 0.3"
-                position="5 7 -3" 
-                animation="property: position; to: 7 5 -5; loop: true; dur: 5000; dir: alternate; easing: easeInOutSine"
-                animation__rotation="property: rotation; to: 0 360 0; loop: true; dur: 9000"
-                class="clickable-creature"
-                sound="src: #charizardSound; volume: 0.6"
-                shadow="cast: true">
-        <!-- Alas simuladas -->
-        <a-plane position="-1 0 0" rotation="0 0 30" width="1.5" height="0.8" material="color: #FFD700; transparent: true; opacity: 0.8"></a-plane>
-        <a-plane position="1 0 0" rotation="0 0 -30" width="1.5" height="0.8" material="color: #FFD700; transparent: true; opacity: 0.8"></a-plane>
-      </a-entity>
-      <a-text value="🔥 CHARIZARD\nCriatura de Fuego\n(Haz clic para sonido)" 
-              position="5 1.5 -3" align="center" 
-              color="#FF4500" width="5" font="roboto"></a-text>
-    </a-entity>
-
-    <!-- CRIATURA 6: ARTICUNO (Simulado) -->
-    <a-entity id="articuno-exhibit" class="flying-creature" sound-trigger="articuno">
-      <a-entity geometry="primitive: sphere; radius: 0.4" 
-                material="color: #87CEEB; metalness: 0.7; roughness: 0.1"
-                position="-2 8 -2" 
-                animation="property: position; to: -4 6 -4; loop: true; dur: 7000; dir: alternate; easing: easeInOutQuad"
-                animation__rotation="property: rotation; to: 0 0 360; loop: true; dur: 6000"
-                class="clickable-creature"
-                sound="src: #articunoSound; volume: 0.5"
-                shadow="cast: true">
-        <!-- Alas de hielo -->
-        <a-plane position="-0.6 0 0" rotation="0 0 60" width="1.2" height="0.6" material="color: #B0E0E6; transparent: true; opacity: 0.9"></a-plane>
-        <a-plane position="0.6 0 0" rotation="0 0 -60" width="1.2" height="0.6" material="color: #B0E0E6; transparent: true; opacity: 0.9"></a-plane>
-      </a-entity>
-      <a-text value="❄️ ARTICUNO\nCriatura de Hielo\n(Haz clic para sonido)" 
-              position="-2 1.5 -2" align="center" 
-              color="#87CEEB" width="5" font="roboto"></a-text>
-    </a-entity>
-
-    <!-- CRIATURA 7: LUGIA (Simulado) -->
-    <a-entity id="lugia-exhibit" class="flying-creature" sound-trigger="lugia">
-      <a-entity geometry="primitive: cylinder; radius: 0.3; height: 1.5" 
-                material="color: #F0F8FF; metalness: 0.5"
-                position="2 9 -7" 
-                animation="property: position; to: 4 7 -9; loop: true; dur: 9000; dir: alternate; easing: easeInOutSine"
-                animation__rotation="property: rotation; to: 360 0 360; loop: true; dur: 11000"
-                class="clickable-creature"
-                sound="src: #lugiaSound; volume: 0.6"
-                shadow="cast: true">
-        <!-- Alas legendarias -->
-        <a-plane position="-0.8 0 0" rotation="0 0 45" width="2" height="1" material="color: #E6E6FA; transparent: true; opacity: 0.8"></a-plane>
-        <a-plane position="0.8 0 0" rotation="0 0 -45" width="2" height="1" material="color: #E6E6FA; transparent: true; opacity: 0.8"></a-plane>
-      </a-entity>
-      <a-text value="🌊 LUGIA\nGuardián del Mar\n(Haz clic para sonido)" 
-              position="2 1.5 -7" align="center" 
-              color="#4169E1" width="5" font="roboto"></a-text>
-    </a-entity>
-
-    <!-- CRIATURA 8: DRAGONITE (Simulado) -->
-    <a-entity id="dragonite-exhibit" class="flying-creature" sound-trigger="dragonite">
-      <a-entity geometry="primitive: sphere; radius: 0.5" 
-                material="color: #FFA500; metalness: 0.2; roughness: 0.3"
-                position="-7 5 -10" 
-                animation="property: position; to: -5 7 -12; loop: true; dur: 6000; dir: alternate; easing: easeInOutQuad"
-                animation__rotation="property: rotation; to: 0 360 0; loop: true; dur: 8000"
-                class="clickable-creature"
-                sound="src: #dragoniteSound; volume: 0.5"
-                shadow="cast: true">
-        <!-- Alas pequeñas -->
-        <a-plane position="-0.5 0.2 0" rotation="0 0 20" width="0.8" height="0.4" material="color: #FFD700; transparent: true; opacity: 0.9"></a-plane>
-        <a-plane position="0.5 0.2 0" rotation="0 0 -20" width="0.8" height="0.4" material="color: #FFD700; transparent: true; opacity: 0.9"></a-plane>
-      </a-entity>
-      <a-text value="🐲 DRAGONITE\nDragón Gentil\n(Haz clic para sonido)" 
-              position="-7 1.5 -10" align="center" 
-              color="#FFA500" width="5" font="roboto"></a-text>
-    </a-entity>
-
-    <!-- Iluminación del museo -->
-    <a-entity light="type: ambient; intensity: 0.6; color: #ffffff"></a-entity>
-    <a-entity light="type: directional; intensity: 0.8; color: #ffffff" 
-              position="5 15 5" shadow="cast: true"></a-entity>
-    <a-entity light="type: directional; intensity: 0.6; color: #ffffff" 
-              position="-5 15 5" shadow="cast: true"></a-entity>
-    
-    <!-- Luces focales para crear ambiente mágico -->
-    <a-entity light="type: point; intensity: 1.5; color: #FFD700" position="-8 4 -8" distance="3"></a-entity>
-    <a-entity light="type: point; intensity: 1.5; color: #FF69B4" position="8 5 -8" distance="3"></a-entity>
-    <a-entity light="type: point; intensity: 1.5; color: #8B0000" position="0 6 -12" distance="4"></a-entity>
-    <a-entity light="type: point; intensity: 1.2; color: #9370DB" position="-5 7 -5" distance="2"></a-entity>
-    <a-entity light="type: point; intensity: 1.3; color: #FF4500" position="5 8 -3" distance="3"></a-entity>
-
-    <!-- Título del museo -->
-    <a-text value="🏛️ MUSEO VIRTUAL POKÉMON - CRIATURAS VOLADORAS" 
-            position="0 4.5 -14.8" 
-            align="center" 
-            color="#2c3e50" 
-            width="10" 
-            font="roboto"></a-text>
-    
-    <!-- Partículas mágicas flotantes -->
-    <a-entity id="magic-particles">
-      <a-entity geometry="primitive: sphere; radius: 0.03" 
-                material="color: #FFD700; transparent: true; opacity: 0.6; emissive: #FFD700; emissiveIntensity: 0.3"
-                animation="property: position; from: -10 2 -5; to: 10 8 -15; loop: true; dur: 15000"
-                position="-10 2 -5"></a-entity>
-      <a-entity geometry="primitive: sphere; radius: 0.02" 
-                material="color: #FF69B4; transparent: true; opacity: 0.5; emissive: #FF69B4; emissiveIntensity: 0.3"
-                animation="property: position; from: 10 3 -8; to: -10 7 -12; loop: true; dur: 18000"
-                position="10 3 -8"></a-entity>
-      <a-entity geometry="primitive: sphere; radius: 0.025" 
-                material="color: #87CEEB; transparent: true; opacity: 0.4; emissive: #87CEEB; emissiveIntensity: 0.3"
-                animation="property: position; from: 0 8 -3; to: 0 3 -15; loop: true; dur: 12000"
-                position="0 8 -3"></a-entity>
-    </a-entity>
+    <!-- Luces -->
+    <a-entity light="type: ambient; intensity: 1"></a-entity>
+    <a-entity light="type: directional; intensity: 0.5" position="0 5 5"></a-entity>
   </a-scene>
 
+  <div id="controls">
+    <button class="ar-button" id="rotateCube1Btn">Girar Pikachu (Y)</button>
+    <button class="ar-button" id="moveCube2Btn">Subir/Bajar Dragón</button>
+    <button class="ar-button" id="rotateCube3Btn">Girar Mew (Z)</button>
+  </div>
+
+  <button id="playMusicBtn">Tocar Música</button>
+
   <script>
-    let cameraEnabled = false;
-    let isPlaying = false;
-    let soundsEnabled = true;
-    let infoVisible = false;
-
-    // Referencias a elementos
-    const video = document.getElementById('videoFeed');
-    const cameraBackground = document.getElementById('cameraBackground');
-    const museumWalls = document.getElementById('museum-walls');
-    const playMusicBtn = document.getElementById('playMusicBtn');
-    const cameraBtn = document.getElementById('cameraBtn');
-    const soundBtn = document.getElementById('soundBtn');
-    const infoBtn = document.getElementById('infoBtn');
-    const infoPanel = document.getElementById('infoPanel');
-    const music = document.getElementById('music');
-
-    // Configurar cámara
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-        .then(function (stream) {
-          video.srcObject = stream;
-          video.play();
-          console.log('Cámara configurada correctamente');
-        })
-        .catch(function (error) {
-          console.log('Error al acceder a la cámara:', error);
-          cameraBtn.style.display = 'none';
-        });
-    } else {
-      cameraBtn.style.display = 'none';
-    }
-
-    // Control de música
-    playMusicBtn.addEventListener('click', () => {
-      if (!isPlaying) {
-        music.play().then(() => {
-          isPlaying = true;
-          playMusicBtn.textContent = '🎵 Detener Música';
-        }).catch(error => {
-          console.log('Error al reproducir música:', error);
-        });
-      } else {
-        music.pause();
-        isPlaying = false;
-        playMusicBtn.textContent = '🎵 Tocar Música';
-      }
-    });
-
-    // Control de cámara
-    cameraBtn.addEventListener('click', () => {
-      cameraEnabled = !cameraEnabled;
-      if (cameraEnabled) {
-        cameraBackground.setAttribute('visible', 'true');
-        museumWalls.setAttribute('visible', 'false');
-        cameraBtn.textContent = '🏛️ Modo Museo';
-        document.querySelector('a-scene').setAttribute('background', 'color: transparent');
-      } else {
-        cameraBackground.setAttribute('visible', 'false');
-        museumWalls.setAttribute('visible', 'true');
-        cameraBtn.textContent = '📷 Modo Cámara';
-        document.querySelector('a-scene').setAttribute('background', 'color: #001122');
-      }
-    });
-
-    // Control de sonidos
-    soundBtn.addEventListener('click', () => {
-      soundsEnabled = !soundsEnabled;
-      soundBtn.textContent = soundsEnabled ? '🔊 Sonidos ON' : '🔇 Sonidos OFF';
-      
-      // Silenciar/activar todos los sonidos
-      const allAudios = document.querySelectorAll('audio:not(#music)');
-      allAudios.forEach(audio => {
-        audio.volume = soundsEnabled ? 0.5 : 0;
-      });
-    });
-
-    // Control de información
-    infoBtn.addEventListener('click', () => {
-      infoVisible = !infoVisible;
-      infoPanel.style.display = infoVisible ? 'block' : 'none';
-      infoBtn.textContent = infoVisible ? '❌ Cerrar' : 'ℹ️ Info';
-    });
-
-    // Función para reproducir sonido de criatura
-    function playCreatureSound(soundId) {
-      if (soundsEnabled) {
-        const audio = document.getElementById(soundId);
-        if (audio) {
-          audio.currentTime = 0;
-          audio.play().catch(error => {
-            console.log('Error al reproducir sonido:', error);
-            // Generar sonido sintético si falla el audio
-            generateSynthSound(soundId);
-          });
-        }
-      }
-    }
-
-    // Generar sonidos sintéticos usando Web Audio API
-    function generateSynthSound(type) {
-      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
-      
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
-      
-      // Diferentes frecuencias para cada criatura
-      const soundFrequencies = {
-        'pikachuSound': [800, 600, 1000],
-        'mewSound': [400, 800, 600],
-        'dragonSound': [200, 150, 300],
-        'butterfreeSound': [1200, 1400, 1000],
-        'charizardSound': [150, 200, 100],
-        'articunoSound': [600, 800, 1000],
-        'lugiaSound': [300, 400, 200],
-        'dragoniteSound': [350, 450, 280]
-      };
-      
-      const frequencies = soundFrequencies[type] || [440, 440, 440];
-      let currentFreq = 0;
-      
-      oscillator.frequency.setValueAtTime(frequencies[0], audioContext.currentTime);
-      gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-      gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.1);
-      
-      // Cambiar frecuencias para crear efecto
-      const changeFreq = () => {
-        if (currentFreq < frequencies.length - 1) {
-          currentFreq++;
-          oscillator.frequency.setValueAtTime(frequencies[currentFreq], audioContext.currentTime + currentFreq * 0.2);
-        }
-      };
-      
-      setTimeout(changeFreq, 200);
-      setTimeout(changeFreq, 400);
-      
-      gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.8);
-      
-      oscillator.start();
-      oscillator.stop(audioContext.currentTime + 0.8);
-    }
-
-    // Efectos de sonido al cargar
     document.addEventListener('DOMContentLoaded', () => {
-      console.log('Museo Virtual con 8 criaturas voladoras cargado correctamente');
-      
-      // Agregar eventos de clic a todas las criaturas
-      const creatures = document.querySelectorAll('.clickable-creature');
-      creatures.forEach((creature, index) => {
-        const soundTypes = ['pikachuSound', 'mewSound', 'dragonSound', 'butterfreeSound', 
-                           'charizardSound', 'articunoSound', 'lugiaSound', 'dragoniteSound'];
-        
-        creature.addEventListener('click', () => {
-          // Efecto visual al hacer clic
-          creature.setAttribute('animation__click', 'property: scale; to: 1.2 1.2 1.2; dur: 200; dir: alternate; loop: 1');
-          
-          // Reproducir sonido
-          playCreatureSound(soundTypes[index]);
-          
-          // Crear partículas de efecto
-          createClickEffect(creature.getAttribute('position'));
-        });
-        
-        // Efecto hover
-        creature.addEventListener('mouseenter', () => {
-          creature.setAttribute('animation__hover', 'property: scale; to: 1.1 1.1 1.1; dur: 300');
-        });
-        
-        creature.addEventListener('mouseleave', () => {
-          creature.setAttribute('animation__hover', 'property: scale; to: 1 1 1; dur: 300');
-        });
+      const cube1 = document.getElementById('cube-1');
+      const interactiveCube = document.getElementById('interactive-cube');
+      const cube3 = document.getElementById('cube-3');
+      const rotateCube1Btn = document.getElementById('rotateCube1Btn');
+      const moveCube2Btn = document.getElementById('moveCube2Btn');
+      const rotateCube3Btn = document.getElementById('rotateCube3Btn');
+      const playMusicBtn = document.getElementById('playMusicBtn');
+      const music = document.getElementById('music');
+      let rotate1Interval, move2Interval, rotate3Interval;
+      let moveUp = true;
+      let isMusicPlaying = false;
+
+      rotateCube1Btn.addEventListener('click', () => {
+        if (rotate1Interval) {
+          clearInterval(rotate1Interval);
+          rotate1Interval = null;
+          rotateCube1Btn.textContent = 'Girar Pikachu (Y)';
+        } else {
+          let currentRotation = cube1.getAttribute('rotation');
+          rotate1Interval = setInterval(() => {
+            currentRotation.y = (currentRotation.y + 1) % 360;
+            cube1.setAttribute('rotation', `${currentRotation.x} ${currentRotation.y} ${currentRotation.z}`);
+          }, 20);
+          rotateCube1Btn.textContent = 'Detener Giro (Y)';
+        }
+      });
+
+      moveCube2Btn.addEventListener('click', () => {
+        if (move2Interval) {
+          clearInterval(move2Interval);
+          move2Interval = null;
+          moveCube2Btn.textContent = 'Subir/Bajar Dragón';
+        } else {
+          const minY = 0.15;
+          const maxY = 0.5;
+          let currentPosition = interactiveCube.getAttribute('position');
+          move2Interval = setInterval(() => {
+            if (moveUp) {
+              currentPosition.y += 0.005;
+              if (currentPosition.y >= maxY) moveUp = false;
+            } else {
+              currentPosition.y -= 0.005;
+              if (currentPosition.y <= minY) moveUp = true;
+            }
+            interactiveCube.setAttribute('position', `${currentPosition.x} ${currentPosition.y} ${currentPosition.z}`);
+          }, 20);
+          moveCube2Btn.textContent = 'Detener Movimiento';
+        }
+      });
+
+      rotateCube3Btn.addEventListener('click', () => {
+        if (rotate3Interval) {
+          clearInterval(rotate3Interval);
+          rotate3Interval = null;
+          rotateCube3Btn.textContent = 'Girar Mew (Z)';
+        } else {
+          let currentRotation = cube3.getAttribute('rotation');
+          rotate3Interval = setInterval(() => {
+            currentRotation.z = (currentRotation.z + 1) % 360;
+            cube3.setAttribute('rotation', `${currentRotation.x} ${currentRotation.y} ${currentRotation.z}`);
+          }, 20);
+          rotateCube3Btn.textContent = 'Detener Giro (Z)';
+        }
+      });
+
+      playMusicBtn.addEventListener('click', () => {
+        if (!isMusicPlaying) {
+          music.play();
+          isMusicPlaying = true;
+          playMusicBtn.textContent = 'Detener Música';
+        } else {
+          music.pause();
+          isMusicPlaying = false;
+          playMusicBtn.textContent = 'Tocar Música';
+        }
       });
     });
-
-    // Crear efecto de partículas al hacer clic
-    function createClickEffect(position) {
-      const scene = document.querySelector('a-scene');
-      const effect = document.createElement('a-entity');
-      
-      effect.setAttribute('geometry', 'primitive: sphere; radius: 0.1');
-      effect.setAttribute('material', 'color: #FFD700; transparent: true; opacity: 0.8');
-      effect.setAttribute('position', position);
-      effect.setAttribute('animation', 'property: scale; to: 2 2 2; dur: 500');
-      effect.setAttribute('animation__fade', 'property: material.opacity; to: 0; dur: 500');
-      
-      scene.appendChild(effect);
-      
-      // Remover el efecto después de la animación
-      setTimeout(() => {
-        scene.removeChild(effect);
-      }, 500);
-    }
-
-    // Animaciones adicionales para crear vida en el museo
-    setInterval(() => {
-      // Cambiar colores de luces aleatoriamente
-      const lights = document.querySelectorAll('[light]');
-      const colors = ['#FFD700', '#FF69B4', '#87CEEB', '#9370DB', '#FF4500', '#32CD32'];
-      
-      lights.forEach((light, index) => {
-        if (index > 2) { // Solo cambiar luces de punto, no las principales
-          const randomColor = colors[Math.floor(Math.random() * colors.length)];
-          light.setAttribute('light', `color: ${randomColor}`);
-        }
-      });
-    }, 5000);
-
-    // Sonidos ambientales aleatorios
-    setInterval(() => {
-      if (soundsEnabled && Math.random() < 0.3) {
-        const soundTypes = ['pikachuSound', 'mewSound', 'butterfreeSound'];
-        const randomSound = soundTypes[Math.floor(Math.random() * soundTypes.length)];
-        
-        const audio = document.getElementById(randomSound);
-        if (audio) {
-          audio.volume = 0.1; // Muy bajo para sonido ambiental
-          audio.play().catch(() => {
-            generateSynthSound(randomSound);
-          });
-        }
-      }
-    }, 15000);
   </script>
 </body>
 </html>
