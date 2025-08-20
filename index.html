@@ -1,89 +1,564 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Escena AR 2x6m</title>
-  <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
-  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
-  <style>
-    body, html {
-      margin: 0;
-      overflow: hidden;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Museo Virtual - Primera Persona</title>
+<script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/supermedium/superframe@master/components/physics-system/dist/aframe-physics-system.min.js"></script>
+<style>
+body {
+  margin: 0;
+  font-family: 'Georgia', serif;
+  background: #1a1a1a;
+}
+
+#ui-overlay {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  background: rgba(139, 69, 19, 0.95);
+  color: #FFD700;
+  padding: 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  max-width: 320px;
+  backdrop-filter: blur(8px);
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+#controls-panel {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 12px;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#rotation-controls {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.95);
+  color: #333;
+  padding: 20px;
+  border-radius: 12px;
+  font-size: 12px;
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(139, 69, 19, 0.2);
+}
+
+#rotation-controls h4 {
+  margin: 0 0 15px 0;
+  color: #8B4513;
+  text-align: center;
+  font-size: 16px;
+}
+
+.control-btn {
+  background: linear-gradient(145deg, #8B4513, #A0522D);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  margin: 3px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 100%;
+}
+
+.control-btn:hover {
+  background: linear-gradient(145deg, #A0522D, #8B4513);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.control-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.control-btn.active {
+  background: linear-gradient(145deg, #228B22, #32CD32);
+  box-shadow: 0 0 15px rgba(50, 205, 50, 0.4);
+}
+
+#character-info {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.98);
+  color: #333;
+  padding: 25px;
+  border-radius: 15px;
+  max-width: 450px;
+  max-height: 80vh;
+  overflow-y: auto;
+  display: none;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+  border: 3px solid rgba(139, 69, 19, 0.3);
+}
+
+#character-info h3 {
+  margin-top: 0;
+  color: #8B4513;
+  text-align: center;
+  font-size: 24px;
+  border-bottom: 2px solid #FFD700;
+  padding-bottom: 10px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: #ff4757;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  background: #ff3742;
+  transform: scale(1.1);
+}
+
+.cursor {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 215, 0, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 999;
+  transform: translate(-50%, -50%);
+  transition: all 0.2s ease;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.cursor.hover {
+  width: 12px;
+  height: 12px;
+  background: rgba(255, 69, 0, 0.8);
+  box-shadow: 0 0 20px rgba(255, 69, 0, 0.7);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -40%);
+  }
+}
+
+.status-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.status-on {
+  background: #32CD32;
+  box-shadow: 0 0 8px rgba(50, 205, 50, 0.6);
+}
+
+.status-off {
+  background: #FF4757;
+  box-shadow: 0 0 8px rgba(255, 71, 87, 0.6);
+}
+
+.section-divider {
+  margin: 15px 0;
+  padding: 8px 0;
+  border-top: 1px solid #ddd;
+  color: #666;
+  font-weight: bold;
+  text-align: center;
+}
+</style>
+#toggle-controls-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1001;
+  background: linear-gradient(145deg, #8B4513, #A0522D);
+  color: white;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(5px);
+}
+
+#toggle-controls-btn:hover {
+  background: linear-gradient(145deg, #A0522D, #8B4513);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+#toggle-controls-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#rotation-controls.hidden {
+  transform: translateX(100%);
+  opacity: 0;
+  pointer-events: none;
+}
 </head>
 <body>
-  <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
-    <!-- Carga de modelos -->
-    <a-assets>
-      <a-asset-item id="modeloPikachu" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Pikachu.glb"></a-asset-item>
-      <a-asset-item id="modeloMew" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Mew.glb"></a-asset-item>
-      <a-asset-item id="modeloDragon" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Dragon.glb"></a-asset-item>
-    </a-assets>
+<!-- Custom Cursor -->
+<div class="cursor" id="custom-cursor"></div>
 
-    <!-- Plano base de 2x6 metros -->
-    <a-plane width="2" height="6" rotation="-90 0 0" color="#cccccc" position="0 0 0"></a-plane>
+<!-- UI Overlays -->
+<div id="ui-overlay">
+  <h3>🏛️ Museo Virtual Nacional</h3>
+  <p>Bienvenido al museo interactivo de <strong>personajes legendarios</strong>.</p>
+  <p>📍 <strong>Sección A:</strong> Pokémon Legendarios</p>
+  <p>📍 <strong>Sección B:</strong> Personajes Icónicos</p>
+  <p><strong>Nuevo:</strong> ¡7 personajes en exhibición!</p>
+</div>
 
-    <!-- Estructura de modelos centrada en (0, 0, 0) -->
-    <a-entity id="main-structure" position="0 0 0" rotation-handler>
-      <a-box id="platform" position="0 0.025 0" width="1.2" height="0.05" depth="0.6" color="#555"></a-box>
+<div id="controls-panel">
+  <strong>📋 Controles de Navegación:</strong><br>
+  <strong>WASD / Flechas:</strong> Caminar<br>
+  <strong>Mouse:</strong> Mirar alrededor (cursor libre)<br>
+  <strong>Click:</strong> Interactuar con exhibiciones<br>
+  <strong>ESC:</strong> Cerrar información<br>
+  <strong>R:</strong> Alternar rotaciones<br>
+  <strong>H:</strong> Ocultar/Mostrar controles
+</div>
 
-      <a-entity id="cube-1"
-                gltf-model="#modeloPikachu"
-                position="-0.3 0.3 0"
-                scale="0.3 0.3 0.3"
-                rotation="0 0 0">
-      </a-entity>
+<button id="toggle-controls-btn" onclick="toggleControlsPanel()">
+  🎮 Controles
+</button>
 
-      <a-entity id="interactive-cube"
-                gltf-model="#modeloDragon"
-                position="0 0.1 0"
-                scale="0.001 0.001 0.001"
-                rotation="0 180 0">
-      </a-entity>
+<div id="rotation-controls">
+  <h4>🎮 Control de Rotaciones</h4>
+  <div style="text-align: center;">
+    <button class="control-btn" id="toggle-all" onclick="toggleAllRotations()">
+      <span class="status-indicator status-on"></span>Alternar Todo
+    </button>
+    
+    <div class="section-divider">SECCIÓN POKÉMON</div>
+    <button class="control-btn active" id="pikachu-btn" onclick="toggleRotation('pikachu')">
+      <span class="status-indicator status-on"></span>Pikachu
+    </button>
+    <button class="control-btn active" id="mew-btn" onclick="toggleRotation('mew')">
+      <span class="status-indicator status-on"></span>Mew
+    </button>
+    <button class="control-btn active" id="dragonite-btn" onclick="toggleRotation('dragonite')">
+      <span class="status-indicator status-on"></span>Dragonite
+    </button>
+    
+    <div class="section-divider">SECCIÓN ESPECIAL</div>
+    <button class="control-btn active" id="shenron-btn" onclick="toggleRotation('shenron')">
+      <span class="status-indicator status-on"></span>Shenron
+    </button>
+    <button class="control-btn active" id="cubone-btn" onclick="toggleRotation('cubone')">
+      <span class="status-indicator status-on"></span>Cubone
+    </button>
+    <button class="control-btn active" id="mcqueen-btn" onclick="toggleRotation('mcqueen')">
+      <span class="status-indicator status-on"></span>McQueen
+    </button>
+    <button class="control-btn active" id="boo-btn" onclick="toggleRotation('boo')">
+      <span class="status-indicator status-on"></span>Boo
+    </button>
+  </div>
+</div>
 
-      <a-entity id="cube-3"
-                gltf-model="#modeloMew"
-                position="0.3 0.3 0"
-                scale="0.6 0.6 0.6"
-                rotation="0 0 0">
-      </a-entity>
+<div id="character-info">
+  <button class="close-btn" onclick="closeCharacterInfo()">&times;</button>
+  <div id="character-content"></div>
+</div>
+
+<a-scene
+  background="color: #2F1B14"
+  fog="type: linear; color: #2F1B14; near: 15; far: 80"
+  physics="driver: cannon; gravity: -9.8"
+  vr-mode-ui="enabled: false"
+  cursor="rayOrigin: mouse"
+  raycaster="objects: .clickable; far: 10">
+
+  <!-- Assets -->
+  <a-assets>
+    <!-- Pokémon Models -->
+    <a-asset-item id="pikachu-model" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Pikachu.glb"></a-asset-item>
+    <a-asset-item id="mew-model" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Mew.glb"></a-asset-item>
+    <a-asset-item id="dragon-model" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Dragon.glb"></a-asset-item>
+    
+    <!-- New Character Models -->
+    <a-asset-item id="modeloShenron" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/shenron_dragon_ball.glb"></a-asset-item>
+    <a-asset-item id="modeloCubone" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/Cubone.glb"></a-asset-item>
+    <a-asset-item id="modeloMcQueen" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/cars_on_the_road_lightning_mcqueen_realistic.glb"></a-asset-item>
+    <a-asset-item id="modeloBoo" src="https://raw.githubusercontent.com/zaggow/Proyecto/main/boo_super_mario_bros.glb"></a-asset-item>
+
+    <!-- Audio Assets -->
+    <audio id="pikachu-sound" src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmMgFyiQ3PHMeSgFJnnA7N6WTQwKUqzj8LVhGQU4kddx"></audio>
+    <audio id="ambient-sound" src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSgFJHfH8N2WTQwKUqzj8LVhGQU4kddy" loop></audio>
+
+    <!-- Material Mixins -->
+    <a-mixin id="wood-material"
+      material="color: #8B4513; roughness: 0.8; metalness: 0.1"></a-mixin>
+    <a-mixin id="marble-floor"
+      material="color: #F5F5DC; roughness: 0.2; metalness: 0.1"></a-mixin>
+    <a-mixin id="glass-material"
+      material="color: #E6F3FF; opacity: 0.25; transparent: true; roughness: 0.1; metalness: 0.1"></a-mixin>
+    <a-mixin id="shelf-material"
+      material="color: #654321; roughness: 0.7; metalness: 0.05"></a-mixin>
+  </a-assets>
+
+  <!-- Enhanced Lighting System -->
+  <a-light type="ambient" color="#404040" intensity="0.3"></a-light>
+  <a-light type="directional" position="0 15 8" color="#FFF8DC" intensity="0.8"
+    shadow="cast: true; mapSize: 4096; camera: left: -40; right: 40; top: 40; bottom: -40"></a-light>
+ 
+  <!-- Spotlights for Pokémon exhibits -->
+  <a-light type="spot" position="-12 8 -5" target="#pikachu-exhibit"
+    color="#FFD700" intensity="1.2" angle="30" penumbra="0.1"></a-light>
+  <a-light type="spot" position="0 8 -5" target="#mew-exhibit"
+    color="#FF69B4" intensity="1.2" angle="30" penumbra="0.1"></a-light>
+  <a-light type="spot" position="12 8 -5" target="#dragonite-exhibit"
+    color="#FFA500" intensity="1.2" angle="30" penumbra="0.1"></a-light>
+
+  <!-- Spotlights for new character exhibits -->
+  <a-light type="spot" position="-15 8 12" target="#shenron-exhibit"
+    color="#00FF00" intensity="1.2" angle="30" penumbra="0.1"></a-light>
+  <a-light type="spot" position="-5 8 12" target="#cubone-exhibit"
+    color="#DEB887" intensity="1.2" angle="30" penumbra="0.1"></a-light>
+  <a-light type="spot" position="5 8 12" target="#mcqueen-exhibit"
+    color="#FF0000" intensity="1.2" angle="30" penumbra="0.1"></a-light>
+  <a-light type="spot" position="15 8 12" target="#boo-exhibit"
+    color="#FFFFFF" intensity="1.2" angle="30" penumbra="0.1"></a-light>
+
+  <!-- Ambient Sound -->
+  <a-entity sound="src: #ambient-sound; autoplay: true; loop: true; volume: 0.2"></a-entity>
+
+  <!-- Museum Structure with Physics -->
+  <!-- Floor with collision -->
+  <a-plane position="0 0 0" rotation="-90 0 0" width="70" height="70"
+    mixin="marble-floor" shadow="receive: true"
+    static-body></a-plane>
+
+  <!-- Walls with collision -->
+  <a-plane position="0 6 -35" width="70" height="12"
+    material="color: #8B7355; roughness: 0.9" shadow="receive: true"
+    static-body></a-plane>
+  <a-plane position="-35 6 0" rotation="0 90 0" width="70" height="12"
+    material="color: #8B7355; roughness: 0.9" shadow="receive: true"
+    static-body></a-plane>
+  <a-plane position="35 6 0" rotation="0 -90 0" width="70" height="12"
+    material="color: #8B7355; roughness: 0.9" shadow="receive: true"
+    static-body></a-plane>
+  <a-plane position="0 6 35" rotation="0 180 0" width="70" height="12"
+    material="color: #8B7355; roughness: 0.9" shadow="receive: true"
+    static-body></a-plane>
+
+  <!-- Ceiling -->
+  <a-plane position="0 12 0" rotation="90 0 0" width="70" height="70"
+    material="color: #654321; roughness: 0.8" shadow="receive: true"></a-plane>
+
+  <!-- Museum Entrance Sign -->
+  <a-entity position="0 8.5 -34">
+    <a-box position="0 0 0" width="15" height="3" depth="0.5"
+      material="color: #654321; roughness: 0.8" shadow="cast: true"></a-box>
+    <a-text value="MUSEO DE PERSONAJES LEGENDARIOS\nSECCION A: POKEMON | SECCION B: ICONICOS\nEXHIBICION ESPECIAL"
+      position="0 0 0.3"
+      align="center"
+      color="#FFD700"
+      font="kelsonsans"
+      width="6"></a-text>
+  </a-entity>
+
+  <!-- SECCIÓN A: GRAN ESTANTERIA POKÉMON -->
+  <a-entity id="main-shelf" position="0 0 -8">
+    <!-- Base de la estantería -->
+    <a-box position="0 1 0" width="10" height="2" depth="6"
+      mixin="shelf-material" shadow="cast: true; receive: true"
+      static-body></a-box>
+   
+    <!-- Superficie superior de exhibición -->
+    <a-box position="0 2.1 0" width="19.5" height="0.2" depth="5.5"
+      material="color: #8B4513; roughness: 0.6" shadow="cast: true; receive: true"
+      static-body></a-box>
+
+    <!-- Divisores internos -->
+    <a-box position="-6.5 1.5 0" width="0.3" height="1" depth="5.5"
+      mixin="shelf-material" static-body></a-box>
+    <a-box position="6.5 1.5 0" width="0.3" height="1" depth="5.5"
+      mixin="shelf-material" static-body></a-box>
+
+    <!-- Respaldo decorativo -->
+    <a-box position="0 3.5 -2.6" width="19.5" height="3" depth="0.3"
+      material="color: #654321; roughness: 0.8" shadow="cast: true"
+      static-body></a-box>
+
+    <!-- Marco dorado decorativo -->
+    <a-box position="0 3.5 -2.5" width="19" height="2.5" depth="0.1"
+      material="color: #FFD700; roughness: 0.3; metalness: 0.8" shadow="cast: true"></a-box>
+
+    <!-- Placa central del museo -->
+    <a-entity position="0 3.5 -2.4">
+      <a-text value="SECCIÓN A - POKÉMON LEGENDARIOS\nCOLECCION GENERACION I\nPOKEMON MUSEUM"
+        align="center"
+        color="#8B4513"
+        font="kelsonsans"
+        width="6"
+        position="0 0 0.01"></a-text>
     </a-entity>
+  </a-entity>
 
-    <!-- Cámara -->
-    <a-entity camera></a-entity>
-  </a-scene>
+  <!-- SECCIÓN B: NUEVA ESTANTERIA PERSONAJES ESPECIALES -->
+  <a-entity id="special-shelf" position="0 0 12">
+    <!-- Base de la estantería especial -->
+    <a-box position="0 1 0" width="12" height="2" depth="6"
+      material="color: #4A4A4A; roughness: 0.7; metalness: 0.1" shadow="cast: true; receive: true"
+      static-body></a-box>
+   
+    <!-- Superficie superior de exhibición -->
+    <a-box position="0 2.1 0" width="24" height="0.2" depth="5.5"
+      material="color: #696969; roughness: 0.6" shadow="cast: true; receive: true"
+      static-body></a-box>
 
-  <script>
-    AFRAME.registerComponent('rotation-handler', {
-      init: function () {
-        const el = this.el;
-        let lastX = null;
-        let rotationSpeed = 0.5;
+    <!-- Divisores internos -->
+    <a-box position="-8 1.5 0" width="0.3" height="1" depth="5.5"
+      material="color: #4A4A4A; roughness: 0.7" static-body></a-box>
+    <a-box position="-2.7 1.5 0" width="0.3" height="1" depth="5.5"
+      material="color: #4A4A4A; roughness: 0.7" static-body></a-box>
+    <a-box position="2.7 1.5 0" width="0.3" height="1" depth="5.5"
+      material="color: #4A4A4A; roughness: 0.7" static-body></a-box>
+    <a-box position="8 1.5 0" width="0.3" height="1" depth="5.5"
+      material="color: #4A4A4A; roughness: 0.7" static-body></a-box>
 
-        el.sceneEl.addEventListener('touchstart', (evt) => {
-          if (evt.touches.length === 1) {
-            lastX = evt.touches[0].pageX;
-          }
-        });
+    <!-- Respaldo decorativo -->
+    <a-box position="0 3.5 -2.6" width="24" height="3" depth="0.3"
+      material="color: #2F2F2F; roughness: 0.8" shadow="cast: true"
+      static-body></a-box>
 
-        el.sceneEl.addEventListener('touchmove', (evt) => {
-          if (evt.touches.length === 1 && lastX !== null) {
-            const currentX = evt.touches[0].pageX;
-            const diffX = currentX - lastX;
-            const rotationY = el.object3D.rotation.y;
-            const newRotationY = (rotationY + (diffX * rotationSpeed * (Math.PI / 180))) % (2 * Math.PI);
-            el.object3D.rotation.y = newRotationY;
-            lastX = currentX;
-          }
-        });
+    <!-- Marco plateado decorativo -->
+    <a-box position="0 3.5 -2.5" width="23.5" height="2.5" depth="0.1"
+      material="color: #C0C0C0; roughness: 0.3; metalness: 0.9" shadow="cast: true"></a-box>
 
-        el.sceneEl.addEventListener('touchend', () => {
-          lastX = null;
-        });
-      }
-    });
-  </script>
-</body>
-</html>
+    <!-- Placa central del museo -->
+    <a-entity position="0 3.5 -2.4">
+      <a-text value="SECCIÓN B - PERSONAJES ICÓNICOS\nDRAGON BALL | POKEMON | CARS | MARIO\nCOLECCION ESPECIAL"
+        align="center"
+        color="#FFD700"
+        font="kelsonsans"
+        width="5"
+        position="0 0 0.01"></a-text>
+    </a-entity>
+  </a-entity>
+
+  <!-- PIKACHU EXHIBIT (Izquierda de la estantería) -->
+  <a-entity id="pikachu-exhibit" position="-10 2.2 -8">
+    <a-cylinder position="0 0.3 0" radius="2" height="0.6"
+      material="color: #DAA520; roughness: 0.6; metalness: 0.2" shadow="cast: true; receive: true"
+      static-body></a-cylinder>
+    <a-sphere position="0 2.5 0" radius="2.5"
+      mixin="glass-material" shadow="receive: true"></a-sphere>
+    <a-entity id="pikachu-model-entity"
+      gltf-model="#pikachu-model"
+      position="0 3.1 0"
+      scale="2.5 2.5 2.5"
+      rotation="0 0 0"
+      animation="property: rotation; to: 0 360 0; loop: true; dur: 15000; pauseEvents: pauseRotation; resumeEvents: resumeRotation"></a-entity>
+    <a-entity position="0 0.6 2.2">
+      <a-box position="0 0 0" width="3.5" height="1.2" depth="0.2"
+        material="color: #CD853F; roughness: 0.7" shadow="cast: true" static-body></a-box>
+      <a-text value="⚡ PIKACHU ⚡\nTipo: Electrico\nMascota Oficial\n\n→ CLICK PARA INFO"
+        position="0 0 0.15" align="center" color="#2F1B14" font="kelsonsans" width="4"></a-text>
+    </a-entity>
+    <a-cylinder position="0 1.5 0" radius="2.2" height="3"
+      opacity="0" class="clickable" data-character="pikachu"></a-cylinder>
+  </a-entity>
+
+  <!-- MEW EXHIBIT (Centro de la estantería) -->
+  <a-entity id="mew-exhibit" position="0 2.2 -8">
+    <a-cylinder position="0 0.3 0" radius="2" height="0.6"
+      material="color: #FF69B4; roughness: 0.5; metalness: 0.3; emissive: #FF1493; emissiveIntensity: 0.1"
+      shadow="cast: true; receive: true" static-body></a-cylinder>
+    <a-sphere position="0 2.5 0" radius="2.6"
+      material="color: #FFB6C1; opacity: 0.2; transparent: true; roughness: 0.1; metalness: 0.1"
+      shadow="receive: true"></a-sphere>
+    <a-entity id="mew-model-entity"
+      gltf-model="#mew-model"
+      position="0 2.8 0"
+      scale="4.0 4.0 4.0"
+      rotation="0 0 0"
+      animation="property: rotation; to: 0 360 0; loop: true; dur: 20000; pauseEvents: pauseRotation; resumeEvents: resumeRotation"></a-entity>
+    <a-entity position="0 0.6 2.2">
+      <a-box position="0 0 0" width="3.5" height="1.2" depth="0.2"
+        material="color: #DA70D6; roughness: 0.6; emissive: #FF1493; emissiveIntensity: 0.05"
+        shadow="cast: true" static-body></a-box>
+      <a-text value="✨ MEW ✨\nTipo: Psiquico\nPokemon Mitico\n\n→ CLICK PARA INFO"
+        position="0 0 0.15" align="center" color="#2F1B14" font="kelsonsans" width="4"></a-text>
+    </a-entity>
+    <a-cylinder position="0 1.5 0" radius="2.2" height="3"
+      opacity="0" class="clickable" data-character="mew"></a-cylinder>
+  </a-entity>
+
+  <!-- DRAGONITE EXHIBIT (Derecha de la estantería) -->
+  <a-entity id="dragonite-exhibit" position="10 2.2 -8">
+    <a-cylinder position="0 0.3 0" radius="2" height="0.6"
+      material="color: #FFA500; roughness: 0.6; metalness: 0.2" shadow="cast: true; receive: true"
+      static-body></a-cylinder>
+    <a-sphere position="0 2.5 0" radius="2.6"
+      mixin="glass-material" shadow="receive: true"></a-sphere>
+    <a-entity id="dragonite-model-entity"
+      gltf-model="#dragon-model"
+      position="0 2.0 0"
+      scale="0.012 0.012 0.012"
+      rotation="0 180 0"
+      animation="property: rotation; to: 0 540 0; loop: true; dur: 18000; pauseEvents: pauseRotation; resumeEvents: resumeRotation"></a-entity>
+    <a-entity position="0 0.6 2.2">
+  
