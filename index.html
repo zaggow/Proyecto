@@ -561,4 +561,557 @@ body {
       rotation="0 180 0"
       animation="property: rotation; to: 0 540 0; loop: true; dur: 18000; pauseEvents: pauseRotation; resumeEvents: resumeRotation"></a-entity>
     <a-entity position="0 0.6 2.2">
+      <a-box position="0 0 0" width="3.5" height="1.2" depth="0.2"
+        material="color: #CD853F; roughness: 0.7" shadow="cast: true" static-body></a-box>
+      <a-text value="🐉 DRAGONITE 🐉\nTipo: Dragon/Volador\nPseudo-Legendario\n\n→ CLICK PARA INFO"
+        position="0 0 0.15" align="center" color="#2F1B14" font="kelsonsans" width="4"></a-text>
+    </a-entity>
+    <a-cylinder position="0 1.5 0" radius="2.2" height="3"
+      opacity="0" class="clickable" data-character="dragonite"></a-cylinder>
+  </a-entity>
+
+  <!-- SHENRON EXHIBIT -->
+  <a-entity id="shenron-exhibit" position="-12 2.2 12">
+    <a-cylinder position="0 0.3 0" radius="2" height="0.6"
+      material="color: #00FF00; roughness: 0.5; metalness: 0.3; emissive: #008000; emissiveIntensity: 0.1"
+      shadow="cast: true; receive: true" static-body></a-cylinder>
+    <a-sphere position="0 2.5 0" radius="2.6"
+      material="color: #90EE90; opacity: 0.25; transparent: true; roughness: 0.1; metalness: 0.1"
+      shadow="receive: true"></a-sphere>
+    <a-entity id="shenron-model-entity"
+      gltf-model="#modeloShenron"
+      position="0 1.6 0"
+      scale="0.004 0.004 0.004"
+      rotation="0 0 0"
+      animation="property: rotation; to: 0 360 0; loop: true; dur: 25000; pauseEvents: pauseRotation; resumeEvents: resumeRotation"></a-entity>
+    <a-entity position="0 0.6 2.2">
+      <a-box position="0 0 0" width="3.5" height="1.2" depth="0.2"
+        material="color: #228B22; roughness: 0.6; emissive: #00FF00; emissiveIntensity: 0.05"
+        shadow="cast: true" static-body></a-box>
+      <a-text value="🐲 SHENRON 🐲\nDragón Divino\nDragon Ball\n\n→ CLICK PARA INFO"
+        position="0 0 0.15" align="center" color="#FFFFFF" font="kelsonsans" width="4"></a-text>
+    </a-entity>
+    <a-cylinder position="0 1.5 0" radius="2.2" height="3"
+      opacity="0" class="clickable" data-character="shenron"></a-cylinder>
+  </a-entity>
+
+  <!-- CUBONE EXHIBIT -->
+  <a-entity id="cubone-exhibit" position="-4 2.2 12">
+    <a-cylinder position="0 0.3 0" radius="2" height="0.6"
+      material="color: #DEB887; roughness: 0.6; metalness: 0.2" shadow="cast: true; receive: true"
+      static-body></a-cylinder>
+    <a-sphere position="0 2.5 0" radius="2.5"
+      mixin="glass-material" shadow="receive: true"></a-sphere>
+    <a-entity id="cubone-model-entity"
+      gltf-model="#modeloCubone"
+      position="0 3.0 0"
+      scale="4.0 4.0 4.0"
+      rotation="0 0 0"
+      animation="property: rotation; to: 0 360 0; loop: true; dur: 16000; pauseEvents: pauseRotation; resumeEvents: resumeRotation"></a-entity>
+    <a-entity position="0 0.6 2.2">
+      <a-box position="0 0 0" width="3.5" height="1.2" depth="0.2"
+        material="color: #CD853F; roughness: 0.7" shadow="cast: true" static-body></a-box>
+      <a-text value="💀 CUBONE 💀\nTipo: Tierra\nPokemon Huérfano\n\n→ CLICK PARA INFO"
+        position="0 0 0.15" align="center" color="#2F1B14" font="kelsonsans" width="4"></a-text>
+    </a-entity>
+    <a-cylinder position="0 1.5 0" radius="2.2" height="3"
+      opacity="0" class="clickable" data-character="cubone"></a-cylinder>
+  </a-entity>
+
+  <!-- MCQUEEN EXHIBIT -->
+  <a-entity id="mcqueen-exhibit" position="4 2.2 12">
+    <a-cylinder position="0 0.3 0" radius="2" height="0.6"
+      material="color: #FF0000; roughness: 0.4; metalness: 0.4; emissive: #FF4500; emissiveIntensity: 0.1"
+      shadow="cast: true; receive: true" static-body></a-cylinder>
+    <a-sphere position="0 2.5 0" radius="2.6"
+      material="color: #FFB6C1; opacity: 0.2; transparent: true; roughness: 0.1; metalness: 0.1"
+      shadow="receive: true"></a-sphere>
+    <a-entity id="mcqueen-model-entity"
+      gltf-model="#modeloMcQueen"
+      position="0 1.8 0"
+      scale="0.8 1.5 0.8"
+      rotation="0 180 0"
+      animation="property: rotation; to: 0 540 0; loop: true; dur: 14000; pauseEvents: pauseRotation; resumeEvents: resumeRotation"></a-entity>
+    <a-entity position="0 0.6 2.2">
+      <a-box position="0 0 0" width="3.5" height="1.2" depth="0.2"
+        material="color: #DC143C; roughness: 0.6; emissive: #FF0000; emissiveIntensity: 0.05"
+        shadow="cast: true" static-body></a-box>
+      <a-text value="🏎️ MCQUEEN 🏎️\nRayo McQueen\nCars - Pixar\n\n→ CLICK PARA INFO"
+        position="0 0 0.15" align="center" color="#FFFFFF" font="kelsonsans" width="4"></a-text>
+    </a-entity>
+    <a-cylinder position="0 1.5 0" radius="2.2" height="3"
+      opacity="0" class="clickable" data-character="mcqueen"></a-cylinder>
+  </a-entity>
+
+  <!-- BOO EXHIBIT -->
+  <a-entity id="boo-exhibit" position="12 2.2 12">
+    <a-cylinder position="0 0.3 0" radius="2" height="0.6"
+      material="color: #FFFFFF; roughness: 0.3; metalness: 0.1; emissive: #F0F8FF; emissiveIntensity: 0.1"
+      shadow="cast: true; receive: true" static-body></a-cylinder>
+    <a-sphere position="0 2.5 0" radius="2.5"
+      material="color: #F0F8FF; opacity: 0.15; transparent: true; roughness: 0.1; metalness: 0.1"
+      shadow="receive: true"></a-sphere>
+    <a-entity id="boo-model-entity"
+      gltf-model="#modeloBoo"
+      position="0 3.2 0"
+      scale="0.008 0.008 0.008"
+      rotation="0 0 0"
+      animation="property: rotation; to: 0 360 0; loop: true; dur: 18000; pauseEvents: pauseRotation; resumeEvents: resumeRotation"></a-entity>
+    <a-entity position="0 0.6 2.2">
+      <a-box position="0 0 0" width="3.5" height="1.2" depth="0.2"
+        material="color: #F5F5F5; roughness: 0.6; emissive: #FFFFFF; emissiveIntensity: 0.05"
+        shadow="cast: true" static-body></a-box>
+      <a-text value="👻 BOO 👻\nFantasma Tímido\nSuper Mario Bros\n\n→ CLICK PARA INFO"
+        position="0 0 0.15" align="center" color="#2F1B14" font="kelsonsans" width="4"></a-text>
+    </a-entity>
+    <a-cylinder position="0 1.5 0" radius="2.2" height="3"
+      opacity="0" class="clickable" data-character="boo"></a-cylinder>
+  </a-entity>
+
+  <!-- Elementos decorativos con colisión -->
+  <!-- Pilares ornamentales -->
+  <a-entity id="pillars">
+    <a-cylinder position="-25 6 -25" radius="0.8" height="12"
+      material="color: #8B4513; roughness: 0.8" shadow="cast: true" static-body></a-cylinder>
+    <a-cylinder position="25 6 -25" radius="0.8" height="12"
+      material="color: #8B4513; roughness: 0.8" shadow="cast: true" static-body></a-cylinder>
+    <a-cylinder position="-25 6 25" radius="0.8" height="12"
+      material="color: #8B4513; roughness: 0.8" shadow="cast: true" static-body></a-cylinder>
+    <a-cylinder position="25 6 25" radius="0.8" height="12"
+      material="color: #8B4513; roughness: 0.8" shadow="cast: true" static-body></a-cylinder>
+   
+    <!-- Capiteles dorados -->
+    <a-cylinder position="-25 11.5 -25" radius="1" height="1"
+      material="color: #FFD700; roughness: 0.3; metalness: 0.8" shadow="cast: true"></a-cylinder>
+    <a-cylinder position="25 11.5 -25" radius="1" height="1"
+      material="color: #FFD700; roughness: 0.3; metalness: 0.8" shadow="cast: true"></a-cylinder>
+    <a-cylinder position="-25 11.5 25" radius="1" height="1"
+      material="color: #FFD700; roughness: 0.3; metalness: 0.8" shadow="cast: true"></a-cylinder>
+    <a-cylinder position="25 11.5 25" radius="1" height="1"
+      material="color: #FFD700; roughness: 0.3; metalness: 0.8" shadow="cast: true"></a-cylinder>
+  </a-entity>
+
+  <!-- Bancos para visitantes -->
+  <a-entity id="benches">
+    <a-box position="0 0.4 2" width="8" height="0.8" depth="1.2"
+      mixin="wood-material" shadow="cast: true; receive: true" static-body></a-box>
+    <a-box position="-18 0.4 0" width="1.2" height="0.8" depth="8"
+      mixin="wood-material" shadow="cast: true; receive: true" static-body></a-box>
+    <a-box position="18 0.4 0" width="1.2" height="0.8" depth="8"
+      mixin="wood-material" shadow="cast: true; receive: true" static-body></a-box>
+  </a-entity>
+
+  <!-- Plantas decorativas -->
+  <a-entity id="plants">
+    <a-cylinder position="-20 0.5 20" radius="1" height="1"
+      material="color: #8B4513; roughness: 0.8" static-body></a-cylinder>
+    <a-cone position="-20 2 20" radius-bottom="0.8" radius-top="0.1" height="3"
+      material="color: #228B22" shadow="cast: true"></a-cone>
+   
+    <a-cylinder position="20 0.5 20" radius="1" height="1"
+      material="color: #8B4513; roughness: 0.8" static-body></a-cylinder>
+    <a-cone position="20 2 20" radius-bottom="0.8" radius-top="0.1" height="3"
+      material="color: #228B22" shadow="cast: true"></a-cone>
+  </a-entity>
+
+  <!-- Player Camera con controles mejorados -->
+  <a-entity id="player"
+    position="0 1.75 20"
+    movement-controls="fly: false; constrainToNavMesh: false"
+    kinematic-body="mass: 80"
+    look-controls="pointerLockEnabled: false; reverseMouseDrag: false">
+   
+    <a-camera wasd-controls="acceleration: 25; easing: 15"
+      mouse-cursor
+      position="0 0 0"
+      cursor="rayOrigin: mouse; fuse: false"
+      raycaster="objects: .clickable; far: 15"></a-camera>
+  </a-entity>
+
+</a-scene>
+
+<script>
+// Estado global de rotaciones
+const rotationStates = {
+  pikachu: true,
+  mew: true,
+  dragonite: true,
+  shenron: true,
+  cubone: true,
+  mcqueen: true,
+  boo: true
+};
+
+// Información detallada de personajes
+const characterData = {
+  pikachu: {
+    name: 'Pikachu',
+    type: 'Eléctrico',
+    created: '27 de Febrero, 1996',
+    generation: 'Generación I',
+    abilities: ['Electricidad Estática', 'Pararrayos', 'Aclimatación'],
+    history: 'Pikachu fue creado por Atsuko Nishida y diseñado por Ken Sugimori para los juegos originales Pokémon Rojo y Verde. Originalmente concebido como una criatura del bosque, Pikachu se convirtió en la mascota oficial de la franquicia después del éxito del anime. Su diseño se inspiró en una ardilla y un ratón, con mejillas que almacenan electricidad. Su popularidad creció exponencialmente cuando se convirtió en el compañero de Ash Ketchum en la serie animada, convirtiéndose en el rostro reconocible de Pokémon mundialmente.',
+    designer: 'Atsuko Nishida',
+    artist: 'Ken Sugimori',
+    height: '0.4 m',
+    weight: '6.0 kg',
+    sound: '¡Pika pika! ⚡',
+    curiosities: 'Las mejillas de Pikachu contienen sacos eléctricos. Cuando se sorprende, descarga electricidad. Su cola tiene forma de rayo y es muy flexible.',
+    franchise: 'Pokémon'
+  },
+  mew: {
+    name: 'Mew',
+    type: 'Psíquico',
+    created: '27 de Febrero, 1996',
+    generation: 'Generación I',
+    abilities: ['Sincronía', 'Telepatía'],
+    history: 'Mew fue programado secretamente en Pokémon Rojo y Verde por Shigeki Morimoto sin el conocimiento inicial de Nintendo. Fue diseñado como el ancestro de todos los Pokémon, poseyendo la composición genética de todas las especies Pokémon conocidas. La existencia de Mew fue descubierta por los jugadores a través de un glitch famoso, creando un estatus legendario antes de su revelación oficial. Este Pokémon mítico se convirtió en el centro de numerosas teorías y leyendas en el mundo Pokémon.',
+    designer: 'Shigeki Morimoto',
+    artist: 'Ken Sugimori',
+    height: '0.4 m',
+    weight: '4.0 kg',
+    sound: '¡Mew mew! 🌟',
+    curiosities: 'Mew puede aprender cualquier movimiento técnico y se dice que contiene el ADN de todos los Pokémon. Puede volverse invisible a voluntad.',
+    franchise: 'Pokémon'
+  },
+  dragonite: {
+    name: 'Dragonite',
+    type: 'Dragón/Volador',
+    created: '27 de Febrero, 1996',
+    generation: 'Generación I',
+    abilities: ['Foco Interno', 'Multiescama', 'Flexibilidad'],
+    history: 'Dragonite fue uno de los Pokémon tipo Dragón originales y el primer pseudo-legendario de la serie, representando el pináculo del poder en la primera generación. A pesar de su apariencia grande y amigable, es conocido como uno de los Pokémon más rápidos, capaz de circunnavegar el globo en 16 horas. El contraste de diseño entre su pre-evolución Dragonair y Dragonite ha sido un tema de discusión entre los fanáticos durante décadas. Su naturaleza benevolente, inteligencia superior y su increíble poder lo convirtieron en uno de los Pokémon más respetados y codiciados.',
+    designer: 'Game Freak',
+    artist: 'Ken Sugimori',
+    height: '2.2 m',
+    weight: '210.0 kg',
+    sound: '¡Dragooon! 🐲',
+    curiosities: 'Dragonite puede dar la vuelta al mundo en 16 horas. Es muy inteligente y tiene un gran corazón. A menudo rescata a náufragos en el mar.',
+    franchise: 'Pokémon'
+  },
+  shenron: {
+    name: 'Shenron',
+    type: 'Dragón Divino',
+    created: '3 de Diciembre, 1984',
+    generation: 'Dragon Ball Original',
+    abilities: ['Concesión de Deseos', 'Vuelo', 'Inmunidad Mágica'],
+    history: 'Shenron es el dragón sagrado de Dragon Ball, creado por Akira Toriyama. Aparece cuando se reúnen las siete Dragon Balls y tiene el poder de conceder deseos. Su diseño está inspirado en los dragones tradicionales chinos y japoneses, siendo una figura central en toda la serie. Shenron ha sido fundamental en muchas de las aventuras de Goku y sus amigos, siendo invocado para revivir a los caídos en batalla, restaurar planetas destruidos y conceder otros deseos importantes. Su naturaleza benevolente pero seria lo convierte en una de las figuras más respetadas del universo Dragon Ball.',
+    designer: 'Akira Toriyama',
+    artist: 'Akira Toriyama',
+    height: '28+ m',
+    weight: 'Incalculable',
+    sound: '¡Tu deseo ha sido concedido! 🐲',
+    curiosities: 'Shenron solo puede ser invocado una vez por año con las mismas Dragon Balls. No puede conceder el mismo deseo dos veces, y hay límites a su poder.',
+    franchise: 'Dragon Ball'
+  },
+  cubone: {
+    name: 'Cubone',
+    type: 'Tierra',
+    created: '27 de Febrero, 1996',
+    generation: 'Generación I',
+    abilities: ['Cabeza Roca', 'Pararrayos', 'Armadura Batalla'],
+    history: 'Cubone es conocido como el "Pokémon Huérfano" y tiene una de las historias más emotivas en el mundo Pokémon. Según la Pokédex, siempre lleva puesto el cráneo de su madre fallecida como casco, y el hueso que porta es un recuerdo de ella. Esta trágica historia lo convirtió en uno de los Pokémon más memorables de la primera generación. Su evolución, Marowak, representa la superación del dolor y el crecimiento personal. Cubone ha aparecido en múltiples medios y es especialmente recordado por su aparición emotiva en el anime, donde se explora su búsqueda por encontrar a su madre.',
+    designer: 'Game Freak',
+    artist: 'Ken Sugimori',
+    height: '0.4 m',
+    weight: '6.5 kg',
+    sound: '¡Cubone bone! 💀',
+    curiosities: 'El cráneo que lleva nunca se lo quita. Llora por las noches recordando a su madre, y sus lágrimas manchan el cráneo.',
+    franchise: 'Pokémon'
+  },
+  mcqueen: {
+    name: 'Lightning McQueen',
+    type: 'Auto de Carreras',
+    created: '9 de Junio, 2006',
+    generation: 'Cars Original',
+    abilities: ['Velocidad Ka-Chiga', 'Drift Perfecto', 'Resistencia Racing'],
+    history: 'Lightning McQueen es el protagonista de la franquicia Cars de Pixar, creado como un ambicioso auto de carreras novato que aprende sobre la importancia de la amistad y la comunidad. Su diseño combina elementos de varios autos de NASCAR reales, especialmente el Chevrolet Monte Carlo. A lo largo de las tres películas de Cars, McQueen evoluciona de ser un corredor egoísta y ambicioso a convertirse en un mentor y líder respetado. Su frase característica "Ka-chiga!" y su personalidad carismática lo convirtieron en uno de los personajes más queridos de Pixar, especialmente entre los niños fanáticos de los autos.',
+    designer: 'Pixar Animation Studios',
+    artist: 'Bob Pauley',
+    height: '1.3 m',
+    weight: '1,200 kg',
+    sound: '¡Ka-chiga! ¡Velocidad! 🏎️',
+    curiosities: 'Su número 95 fue elegido porque Toy Story fue lanzado en 1995. Su diseño está basado en autos de NASCAR reales y puede alcanzar velocidades de más de 200 mph.',
+    franchise: 'Cars (Pixar)'
+  },
+  boo: {
+    name: 'Boo',
+    type: 'Fantasma',
+    created: '13 de Septiembre, 1985',
+    generation: 'Super Mario Bros Original',
+    abilities: ['Invisibilidad', 'Intangibilidad', 'Persecución Sigilosa'],
+    history: 'Boo es uno de los enemigos más icónicos de la franquicia Super Mario, debutando en Super Mario Bros. 3. Estos fantasmas tímidos tienen la característica única de perseguir a Mario cuando no los está mirando, pero se detienen y se cubren la cara con timidez cuando Mario se da la vuelta. Su diseño simple pero expresivo, con sus grandes ojos y sonrisa traviesa, los ha convertido en favoritos de los fanáticos. Los Boos han aparecido en prácticamente todos los juegos de Mario desde entonces, incluyendo las famosas mansiones encantadas de Luigi. Su comportamiento único de esconderse cuando son observados directamente se ha convertido en una mecánica de juego clásica.',
+    designer: 'Nintendo EAD',
+    artist: 'Shigeru Miyamoto',
+    height: '1.0 m',
+    weight: '0 kg (es un fantasma)',
+    sound: '¡Boooo! 👻',
+    curiosities: 'Los Boos solo se mueven cuando no los miras directamente. Su nombre viene del sonido que hacen para asustar. Son inmunes a la mayoría de ataques frontales.',
+    franchise: 'Super Mario Bros'
+  }
+};
+
+// Inicialización del sistema
+document.addEventListener('DOMContentLoaded', function() {
+  initializeInteractions();
+  setupCustomCursor();
+  setupKeyboardControls();
+  hideUIAfterDelay();
+});
+
+function initializeInteractions() {
+  // Eventos de click en exhibiciones
+  document.querySelectorAll('.clickable').forEach(element => {
+    element.addEventListener('mouseenter', function() {
+      document.getElementById('custom-cursor').classList.add('hover');
+    });
+   
+    element.addEventListener('mouseleave', function() {
+      document.getElementById('custom-cursor').classList.remove('hover');
+    });
+
+    element.addEventListener('click', function() {
+      const characterType = this.getAttribute('data-character');
+      const character = characterData[characterType];
+     
+      // Mostrar información
+      showCharacterInfo(characterType);
+     
+      // Reproducir sonido
+      playCharacterSound();
+     
+      // Efecto visual
+      this.setAttribute('animation__click', 'property: scale; to: 1.05 1.05 1.05; dur: 200; dir: alternate; loop: 1');
+    });
+  });
+}
+
+function setupCustomCursor() {
+  const cursor = document.getElementById('custom-cursor');
+  let mouseX = 0, mouseY = 0;
+ 
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+   
+    cursor.style.left = mouseX + 'px';
+    cursor.style.top = mouseY + 'px';
+  });
+ 
+  // Ocultar cursor por defecto
+  document.body.style.cursor = 'none';
+}
+
+function setupKeyboardControls() {
+  document.addEventListener('keydown', function(event) {
+    switch(event.key.toLowerCase()) {
+      case 'escape':
+        closeCharacterInfo();
+        break;
+      case 'r':
+        toggleAllRotations();
+        break;
+      case 'h':
+        toggleControlsPanel();
+        break;
+      case '1':
+        toggleRotation('pikachu');
+        break;
+      case '2':
+        toggleRotation('mew');
+        break;
+      case '3':
+        toggleRotation('dragonite');
+        break;
+      case '4':
+        toggleRotation('shenron');
+        break;
+      case '5':
+        toggleRotation('cubone');
+        break;
+      case '6':
+        toggleRotation('mcqueen');
+        break;
+      case '7':
+        toggleRotation('boo');
+        break;
+    }
+  });
+}
+
+function hideUIAfterDelay() {
+  setTimeout(() => {
+    const overlay = document.getElementById('ui-overlay');
+    overlay.style.opacity = '0';
+    overlay.style.transition = 'opacity 2s ease-out';
+    setTimeout(() => {
+      overlay.style.display = 'none';
+    }, 2000);
+  }, 8000);
+}
+
+// Control de visibilidad del panel de controles
+function toggleControlsPanel() {
+  const controlsPanel = document.getElementById('rotation-controls');
+  const toggleBtn = document.getElementById('toggle-controls-btn');
   
+  if (controlsPanel.classList.contains('hidden')) {
+    // Mostrar controles
+    controlsPanel.classList.remove('hidden');
+    toggleBtn.textContent = '🎮 Controles';
+    toggleBtn.style.background = 'linear-gradient(145deg, #8B4513, #A0522D)';
+  } else {
+    // Ocultar controles
+    controlsPanel.classList.add('hidden');
+    toggleBtn.textContent = '👁️ Mostrar';
+    toggleBtn.style.background = 'linear-gradient(145deg, #666, #888)';
+  }
+}
+
+// Control de rotaciones
+function toggleRotation(character) {
+  const entity = document.getElementById(`${character}-model-entity`);
+  const button = document.getElementById(`${character}-btn`);
+  const indicator = button.querySelector('.status-indicator');
+ 
+  if (rotationStates[character]) {
+    // Pausar rotación
+    entity.emit('pauseRotation');
+    rotationStates[character] = false;
+    button.classList.remove('active');
+    indicator.classList.remove('status-on');
+    indicator.classList.add('status-off');
+  } else {
+    // Reanudar rotación
+    entity.emit('resumeRotation');
+    rotationStates[character] = true;
+    button.classList.add('active');
+    indicator.classList.remove('status-off');
+    indicator.classList.add('status-on');
+  }
+}
+
+function toggleAllRotations() {
+  const allActive = Object.values(rotationStates).every(state => state);
+  const newState = !allActive;
+ 
+  ['pikachu', 'mew', 'dragonite', 'shenron', 'cubone', 'mcqueen', 'boo'].forEach(character => {
+    const entity = document.getElementById(`${character}-model-entity`);
+    const button = document.getElementById(`${character}-btn`);
+    const indicator = button.querySelector('.status-indicator');
+   
+    if (newState) {
+      entity.emit('resumeRotation');
+      button.classList.add('active');
+      indicator.classList.remove('status-off');
+      indicator.classList.add('status-on');
+    } else {
+      entity.emit('pauseRotation');
+      button.classList.remove('active');
+      indicator.classList.remove('status-on');
+      indicator.classList.add('status-off');
+    }
+   
+    rotationStates[character] = newState;
+  });
+ 
+  // Actualizar botón principal
+  const mainButton = document.getElementById('toggle-all');
+  const mainIndicator = mainButton.querySelector('.status-indicator');
+ 
+  if (newState) {
+    mainIndicator.classList.remove('status-off');
+    mainIndicator.classList.add('status-on');
+  } else {
+    mainIndicator.classList.remove('status-on');
+    mainIndicator.classList.add('status-off');
+  }
+}
+
+function showCharacterInfo(characterType) {
+  const character = characterData[characterType];
+  const infoBox = document.getElementById('character-info');
+  const content = document.getElementById('character-content');
+
+  content.innerHTML = `
+    <h3>${character.name} ${character.sound}</h3>
+   
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+      <div>
+        <p><strong>🏷️ Tipo:</strong> ${character.type}</p>
+        <p><strong>📅 Creado:</strong> ${character.created}</p>
+        <p><strong>🌟 Serie:</strong> ${character.generation}</p>
+        <p><strong>📏 Altura:</strong> ${character.height}</p>
+      </div>
+      <div>
+        <p><strong>⚖️ Peso:</strong> ${character.weight}</p>
+        <p><strong>🎨 Diseñador:</strong> ${character.designer}</p>
+        <p><strong>✏️ Artista:</strong> ${character.artist}</p>
+        <p><strong>🎮 Franquicia:</strong> ${character.franchise}</p>
+      </div>
+    </div>
+   
+    <div style="margin-bottom: 15px;">
+      <p><strong>⚡ Habilidades:</strong></p>
+      <ul style="margin: 5px 0; padding-left: 20px;">
+        ${character.abilities.map(ability => `<li>${ability}</li>`).join('')}
+      </ul>
+    </div>
+   
+    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+      <p><strong>📚 Historia y Desarrollo:</strong></p>
+      <p style="text-align: justify; line-height: 1.6;">${character.history}</p>
+    </div>
+   
+    <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107;">
+      <p><strong>💡 Curiosidades:</strong></p>
+      <p style="text-align: justify; line-height: 1.6;">${character.curiosities}</p>
+    </div>
+  `;
+
+  infoBox.style.display = 'block';
+  infoBox.style.animation = 'slideIn 0.4s ease-out';
+}
+
+function closeCharacterInfo() {
+  const infoBox = document.getElementById('character-info');
+  infoBox.style.animation = 'slideOut 0.3s ease-in';
+  setTimeout(() => {
+    infoBox.style.display = 'none';
+  }, 300);
+}
+
+function playCharacterSound() {
+  try {
+    const audioUrl = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmMgFyiQ3PHMeSgFJnnA7N6WTQwKUqzj8LVhGQU4kddx';
+    const audio = new Audio(audioUrl);
+    audio.volume = 0.6;
+    audio.play().catch(e => console.log('Audio play failed:', e));
+  } catch (error) {
+    console.log('Error creating audio:', error);
+  }
+}
+
+// Componente personalizado para efectos adicionales
+AFRAME.registerComponent('museum-effects', {
+  init: function () {
+    console.log('🏛️ Museo de Personajes Legendarios cargado exitosamente');
+    console.log('⚡ 7 personajes en exhibición');
+    console.log('🎮 Usa R para alternar todas las rotaciones');
+  }
+});
+
+// Aplicar efectos
+document.querySelector('a-scene').setAttribute('museum-effects', '');
+
+// Gestión de rendimiento
+AFRAME.registerComponent('performance-monitor', {
+  init: function () {
+    this.el.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  }
+});
+
+document.querySelector('a-scene').setAttribute('performance-monitor', '');
+</script>
+</body>
+</html>
